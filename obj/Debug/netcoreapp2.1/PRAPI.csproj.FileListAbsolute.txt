@@ -1,0 +1,14 @@
+C:\Users\Paweł\Desktop\prorental\PRAPI\obj\Debug\netcoreapp2.1\PRAPI.csprojAssemblyReference.cache
+C:\Users\Paweł\Desktop\prorental\PRAPI\obj\Debug\netcoreapp2.1\PRAPI.csproj.CoreCompileInputs.cache
+C:\Users\Paweł\Desktop\prorental\PRAPI\obj\Debug\netcoreapp2.1\PRAPI.RazorAssemblyInfo.cache
+C:\Users\Paweł\Desktop\prorental\PRAPI\obj\Debug\netcoreapp2.1\PRAPI.RazorAssemblyInfo.cs
+C:\Users\Paweł\Desktop\prorental\PRAPI\obj\Debug\netcoreapp2.1\PRAPI.AssemblyInfoInputs.cache
+C:\Users\Paweł\Desktop\prorental\PRAPI\obj\Debug\netcoreapp2.1\PRAPI.AssemblyInfo.cs
+C:\Users\Paweł\Desktop\prorental\PRAPI\bin\Debug\netcoreapp2.1\PRAPI.deps.json
+C:\Users\Paweł\Desktop\prorental\PRAPI\bin\Debug\netcoreapp2.1\PRAPI.runtimeconfig.json
+C:\Users\Paweł\Desktop\prorental\PRAPI\bin\Debug\netcoreapp2.1\PRAPI.runtimeconfig.dev.json
+C:\Users\Paweł\Desktop\prorental\PRAPI\bin\Debug\netcoreapp2.1\PRAPI.dll
+C:\Users\Paweł\Desktop\prorental\PRAPI\bin\Debug\netcoreapp2.1\PRAPI.pdb
+C:\Users\Paweł\Desktop\prorental\PRAPI\obj\Debug\netcoreapp2.1\PRAPI.RazorTargetAssemblyInfo.cache
+C:\Users\Paweł\Desktop\prorental\PRAPI\obj\Debug\netcoreapp2.1\PRAPI.dll
+C:\Users\Paweł\Desktop\prorental\PRAPI\obj\Debug\netcoreapp2.1\PRAPI.pdb
