@@ -49,7 +49,8 @@ namespace PRAPI.Controllers
             try
             {
                 var file = Request.Form.Files[0];
-                if (!this.cloudinaryService.CheckFile(file)) return BadRequest();
+                if (!this.cloudinaryService.CheckFile(file))
+                    return BadRequest("Uploaded file is not a jpeg or too big ( > 6 MB )");
 
                 var uploadResult = this.cloudinaryService.UploadFile(file);
                 carForCreateDto.PublicId = uploadResult.PublicId.ToString();
@@ -156,14 +157,28 @@ namespace PRAPI.Controllers
         [HttpPut("update")]
         public async Task<IActionResult> UpdateCar([FromForm]CarDetailsFullDto carForUpdate)
         {
-            // NOT COMPLETED
             try
             {
-                var file = Request.Form.Files[0];
-                if (!this.cloudinaryService.CheckFile(file)) return BadRequest();
+                if (Request.Form.Files.Count > 0)
+                {
+                    var carFromRepo = await this.repo.GetCar(carForUpdate.Id);
 
-                var uploadResult = this.cloudinaryService.UploadFile(file);
-                carForUpdate.PhotoUrl = uploadResult.Uri.ToString();
+                    var file = Request.Form.Files[0];
+                    if (!this.cloudinaryService.CheckFile(file))
+                        return BadRequest("Uploaded file is not a jpeg or too big ( > 6 MB )");
+
+                    this.cloudinaryService.DeleteFile(carFromRepo.PublicId);
+
+                    var uploadResult = this.cloudinaryService.UploadFile(file);
+                    carForUpdate.PublicId = uploadResult.PublicId.ToString();
+                    carForUpdate.PhotoUrl = uploadResult.Uri.ToString();
+                }
+                else
+                {
+                    var carFromRepo = await this.repo.GetCar(carForUpdate.Id);
+                    carForUpdate.PublicId = carFromRepo.PublicId.ToString();
+                    carForUpdate.PhotoUrl = carFromRepo.PhotoUrl.ToString();
+                }
             }
             catch (System.Exception)
             {
@@ -172,14 +187,15 @@ namespace PRAPI.Controllers
 
             try
             {
-                var carForCreate = this.mapper.Map<Car>(carForUpdate);
-                this.repo.CreateCar(carForCreate);
+                var carFromRepo = await this.repo.GetCar(carForUpdate.Id);
+
+                this.mapper.Map(carForUpdate, carFromRepo);
                 await this.repo.SaveAll();
-                return Ok("Car created successfully");
+                return Ok("Car updated successfully");
             }
             catch (System.Exception)
             {
-                return BadRequest("Problem with saving car in database");
+                return BadRequest("Problem with updating car in database");
             }
         }
 
