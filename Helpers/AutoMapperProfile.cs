@@ -13,8 +13,9 @@ namespace PRAPI.Helpers
             CreateMap<UserDto, User>();
 
             CreateMap<Car, CarDetailsFullDto>();
-            CreateMap<CarForCreateDto, Car>();
             CreateMap<Car, CarDetailsForUserDto>();
+            CreateMap<CarForCreateDto, Car>();
+            CreateMap<CarDetailsFullDto, Car>();
         }
     }
 }

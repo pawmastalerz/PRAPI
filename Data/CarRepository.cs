@@ -18,16 +18,12 @@ namespace PRAPI.Data
             this.context = context;
             this.hostingEnvironment = hostingEnvironment;
         }
+        
         public bool CreateCar(Car car)
         {
             this.context.Cars.Add(car);
             this.context.SaveChanges();
             return true;
-        }
-
-        public void Delete<T>(T entity) where T : class
-        {
-            this.context.Remove(entity);
         }
 
         public async Task<List<Car>> GetAllCars()
@@ -41,6 +37,11 @@ namespace PRAPI.Data
             var carToReturn = await this.context.Cars
                 .FirstOrDefaultAsync(p => p.Id == id);
             return carToReturn;
+        }
+
+        public void Delete<T>(T entity) where T : class
+        {
+            this.context.Remove(entity);
         }
 
         public async Task<bool> SaveAll()

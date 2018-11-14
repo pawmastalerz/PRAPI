@@ -44,6 +44,8 @@ namespace PRAPI.Migrations
 
                     b.Property<int>("Price");
 
+                    b.Property<string>("PublicId");
+
                     b.Property<DateTime>("ReservedFrom");
 
                     b.Property<DateTime>("ReservedTo");

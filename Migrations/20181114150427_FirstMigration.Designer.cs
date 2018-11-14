@@ -9,7 +9,7 @@ using PRAPI.Data;
 namespace PRAPI.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20181113210205_FirstMigration")]
+    [Migration("20181114150427_FirstMigration")]
     partial class FirstMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -45,6 +45,8 @@ namespace PRAPI.Migrations
                     b.Property<string>("PhotoUrl");
 
                     b.Property<int>("Price");
+
+                    b.Property<string>("PublicId");
 
                     b.Property<DateTime>("ReservedFrom");
 

@@ -16,6 +16,7 @@ namespace PRAPI.Dtos
         public int Price { get; set; }
         public int Year { get; set; }
         public float LP100Km { get; set; }
+        public string PublicId { get; set; }
         public string PhotoUrl { get; set; }
         public DateTime ReservedFrom { get; set; }
         public DateTime ReservedTo { get; set; }

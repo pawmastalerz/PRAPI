@@ -52,6 +52,7 @@ namespace PRAPI.Controllers
                 if (!this.cloudinaryService.CheckFile(file)) return BadRequest();
 
                 var uploadResult = this.cloudinaryService.UploadFile(file);
+                carForCreateDto.PublicId = uploadResult.PublicId.ToString();
                 carForCreateDto.PhotoUrl = uploadResult.Uri.ToString();
             }
             catch (System.Exception)
@@ -72,6 +73,7 @@ namespace PRAPI.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet("full/all")]
         public async Task<IActionResult> GetAllCarsFull()
         {
@@ -90,6 +92,7 @@ namespace PRAPI.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet("full/{id}")]
         public async Task<IActionResult> GetCarFull(int id)
         {
@@ -151,9 +154,33 @@ namespace PRAPI.Controllers
 
         [Authorize]
         [HttpPut("update")]
-        public async Task<IActionResult> UpdateCar()
+        public async Task<IActionResult> UpdateCar([FromForm]CarDetailsFullDto carForUpdate)
         {
-            return Ok();
+            // NOT COMPLETED
+            try
+            {
+                var file = Request.Form.Files[0];
+                if (!this.cloudinaryService.CheckFile(file)) return BadRequest();
+
+                var uploadResult = this.cloudinaryService.UploadFile(file);
+                carForUpdate.PhotoUrl = uploadResult.Uri.ToString();
+            }
+            catch (System.Exception)
+            {
+                return BadRequest("Problem with uploading car photo to cloudinary");
+            }
+
+            try
+            {
+                var carForCreate = this.mapper.Map<Car>(carForUpdate);
+                this.repo.CreateCar(carForCreate);
+                await this.repo.SaveAll();
+                return Ok("Car created successfully");
+            }
+            catch (System.Exception)
+            {
+                return BadRequest("Problem with saving car in database");
+            }
         }
 
         [Authorize]

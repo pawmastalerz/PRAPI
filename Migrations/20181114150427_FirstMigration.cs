@@ -25,6 +25,7 @@ namespace PRAPI.Migrations
                     Price = table.Column<int>(nullable: false),
                     Year = table.Column<int>(nullable: false),
                     LP100Km = table.Column<float>(nullable: false),
+                    PublicId = table.Column<string>(nullable: true),
                     PhotoUrl = table.Column<string>(nullable: true),
                     ReservedFrom = table.Column<DateTime>(nullable: false),
                     ReservedTo = table.Column<DateTime>(nullable: false)
