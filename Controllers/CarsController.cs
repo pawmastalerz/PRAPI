@@ -16,7 +16,7 @@ using PRAPI.Data;
 using PRAPI.Dtos;
 using PRAPI.Helpers;
 using PRAPI.Models;
-
+using PRAPI.Services;
 
 namespace PRAPI.Controllers
 {
@@ -27,74 +27,50 @@ namespace PRAPI.Controllers
         private readonly ICarRepository repo;
         private readonly IMapper mapper;
         private readonly IHostingEnvironment hostingEnvironment;
-        private readonly IOptions<CloudinarySettings> cloudinarySettings;
+        private readonly ICloudinaryService cloudinaryService;
         private Cloudinary cloudinary;
 
         public CarsController(
             ICarRepository repo,
             IMapper mapper,
             IHostingEnvironment hostingEnvironment,
-            IOptions<CloudinarySettings> cloudinarySettings)
+            ICloudinaryService cloudinaryService)
         {
             this.mapper = mapper;
             this.repo = repo;
             this.hostingEnvironment = hostingEnvironment;
-            this.cloudinarySettings = cloudinarySettings;
-
-            Account acc = new Account(
-                this.cloudinarySettings.Value.CloudName,
-                this.cloudinarySettings.Value.ApiKey,
-                this.cloudinarySettings.Value.ApiSecret
-            );
-
-            this.cloudinary = new Cloudinary(acc);
+            this.cloudinaryService = cloudinaryService;
         }
 
         [Authorize]
         [HttpPost("create")]
         public async Task<IActionResult> CreateCar([FromForm]CarForCreateDto carForCreateDto)
         {
-            var file = Request.Form.Files[0];
-            // Accept only .jpg files no bigger than 6 MB
-            if
-            (
-                (file.ContentType.ToLower() != "image/jpg" &&
-                file.ContentType.ToLower() != "image/pjpeg" &&
-                file.ContentType.ToLower() != "image/jpeg") ||
-                (Path.GetExtension(file.FileName).ToLower() != ".jpg" &&
-                Path.GetExtension(file.FileName).ToLower() != ".jpeg") ||
-                (file.Length > 6291456)
-            )
-                return BadRequest();
-
-            var uploadResult = new ImageUploadResult();
-
-            if (file.Length > 0)
+            try
             {
-                using (var stream = file.OpenReadStream())
-                {
-                    var uploadParams = new ImageUploadParams()
-                    {
-                        File = new FileDescription(file.Name, stream),
-                        Transformation = new Transformation()
-                        .Height(1000)
-                        .Width(1000)
-                        .Crop("fill")
-                    };
+                var file = Request.Form.Files[0];
+                if (!this.cloudinaryService.CheckFile(file)) return BadRequest();
 
-                    uploadResult = this.cloudinary.Upload(uploadParams);
-                }
+                var uploadResult = this.cloudinaryService.UploadFile(file);
+                carForCreateDto.PhotoUrl = uploadResult.Uri.ToString();
+            }
+            catch (System.Exception)
+            {
+                return BadRequest("Problem with uploading car photo to cloudinary");
             }
 
-            carForCreateDto.PhotoUrl = uploadResult.Uri.ToString();
+            try
+            {
+                var carForCreate = this.mapper.Map<Car>(carForCreateDto);
+                this.repo.CreateCar(carForCreate);
+                await this.repo.SaveAll();
+                return Ok("Car created successfully");
+            }
+            catch (System.Exception)
+            {
+                return BadRequest("Problem with saving car in database");
+            }
 
-            var carForCreate = this.mapper.Map<Car>(carForCreateDto);
-            this.repo.CreateCar(carForCreate);
-
-            if (await this.repo.SaveAll())
-                return CreatedAtRoute("create", carForCreate);
-
-            return BadRequest();
         }
 
         [Authorize]
