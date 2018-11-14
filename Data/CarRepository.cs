@@ -30,22 +30,9 @@ namespace PRAPI.Data
             this.context.Remove(entity);
         }
 
-        public void DeleteFile(Car car)
-        {
-            
-        }
-
         public async Task<List<Car>> GetAllCars()
         {
             return await this.context.Cars
-                .FromSql("SELECT * FROM prorental.Cars")
-                .ToListAsync();
-        }
-
-        public async Task<List<Car>> GetNewsCars()
-        {
-            return await this.context.Cars
-                .FromSql("SELECT * FROM prorental.Cars WHERE Accepted = 1")
                 .ToListAsync();
         }
 

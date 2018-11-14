@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using AutoMapper;
 using PRAPI.Dtos;
 using PRAPI.Models;
@@ -11,11 +12,9 @@ namespace PRAPI.Helpers
             CreateMap<User, UserDto>();
             CreateMap<UserDto, User>();
 
-            CreateMap<Car, CarForUpdateDto>();
-            CreateMap<CarForUpdateDto, Car>();
-
-            CreateMap<Car, CarForCreateDto>();
+            CreateMap<Car, CarDetailsFullDto>();
             CreateMap<CarForCreateDto, Car>();
+            CreateMap<Car, CarDetailsForUserDto>();
         }
     }
 }

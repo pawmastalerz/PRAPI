@@ -2,11 +2,10 @@ using System;
 
 namespace PRAPI.Dtos
 {
-    public class CarForCreateDto
+    public class CarDetailsForUserDto
     {
+        public int Id { get; set; }
         public string License { get; set; }
-        public DateTime NextTechReview { get; set; }
-        public DateTime NextInsurancePayment { get; set; }
         public string Brand { get; set; }
         public string Model { get; set; }
         public string Class { get; set; }

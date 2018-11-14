@@ -70,28 +70,56 @@ namespace PRAPI.Controllers
             {
                 return BadRequest("Problem with saving car in database");
             }
-
         }
-
-        [Authorize]
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetCar(int id)
+        
+        [HttpGet("full/all")]
+        public async Task<IActionResult> GetAllCarsFull()
         {
-            var carToReturn = await this.repo.GetCar(id);
-            return Ok(carToReturn);
-        }
+            var carsFromRepo = await this.repo.GetAllCars();
 
-        [Authorize]
-        [HttpGet("all")]
-        public async Task<IActionResult> GetAllCars()
-        {
-            var carsToReturn = await this.repo.GetAllCars();
-
-            if (carsToReturn != null)
-                return Ok(carsToReturn);
+            if (carsFromRepo != null)
+                return Ok(carsFromRepo);
 
             return BadRequest();
         }
+
+        [HttpGet("full/{id}")]
+        public async Task<IActionResult> GetCarFull(int id)
+        {
+            var carFromRepo = await this.repo.GetCar(id);
+            if (carFromRepo != null)
+                return Ok(carFromRepo);
+
+            return BadRequest();
+        }
+
+        [HttpGet("user/all")]
+        public async Task<IActionResult> GetAllCarsForUser()
+        {
+            var carsFromRepo = await this.repo.GetAllCars();
+
+            if (carsFromRepo != null)
+            {
+                var carsToReturn = this.mapper.Map<List<Car>, List<CarDetailsForUserDto>>(carsFromRepo);
+                return Ok(carsToReturn);
+            }
+
+            return BadRequest();
+        }
+
+        [HttpGet("user/{id}")]
+        public async Task<IActionResult> GetCarForUser(int id)
+        {
+            var carFromRepo = await this.repo.GetCar(id);
+            if (carFromRepo != null)
+            {
+                var carToReturn = this.mapper.Map<Car, CarDetailsForUserDto>(carFromRepo);
+                return Ok(carToReturn);
+            }
+            
+            return BadRequest();
+        }
+
 
         [Authorize]
         [HttpPut("update")]
@@ -105,7 +133,6 @@ namespace PRAPI.Controllers
         public async Task<IActionResult> DeleteCar(int id)
         {
             var carInRepo = await this.repo.GetCar(id);
-            this.repo.DeleteFile(carInRepo);
             this.repo.Delete(carInRepo);
 
             if (await this.repo.SaveAll())
