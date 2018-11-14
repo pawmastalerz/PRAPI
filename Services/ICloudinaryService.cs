@@ -8,5 +8,6 @@ namespace PRAPI.Services
     {
         bool CheckFile(IFormFile file);
         ImageUploadResult UploadFile(IFormFile file);
+        bool DeleteFile(string publicId);
     }
 }

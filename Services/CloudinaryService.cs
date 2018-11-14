@@ -64,5 +64,15 @@ namespace PRAPI.Services
             }
             return uploadResult;
         }
+
+        public bool DeleteFile(string publicId)
+        {
+            var deletionParams = new DeletionParams(publicId);
+            var result = this.cloudinary.Destroy(deletionParams);
+            if (result.Result == "ok")
+                return true;
+            
+            return false;
+        }
     }
 }

@@ -187,13 +187,22 @@ namespace PRAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCar(int id)
         {
-            var carInRepo = await this.repo.GetCar(id);
-            this.repo.Delete(carInRepo);
+            try
+            {
+                var carInRepo = await this.repo.GetCar(id);
+                if (this.cloudinaryService.DeleteFile(carInRepo.PublicId))
+                {
+                    this.repo.Delete(carInRepo);
+                    await this.repo.SaveAll();
+                    return Ok("Car with id " + id + " deleted successfully");
+                }
+                return BadRequest("Problem with deleting car photo in cloudinary");
 
-            if (await this.repo.SaveAll())
-                return Ok();
-
-            return NoContent();
+            }
+            catch (System.Exception)
+            {
+                return BadRequest("Problem with deleting car in database");
+            }
         }
     }
 }
