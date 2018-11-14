@@ -71,53 +71,81 @@ namespace PRAPI.Controllers
                 return BadRequest("Problem with saving car in database");
             }
         }
-        
+
         [HttpGet("full/all")]
         public async Task<IActionResult> GetAllCarsFull()
         {
-            var carsFromRepo = await this.repo.GetAllCars();
+            try
+            {
+                var carsFromRepo = await this.repo.GetAllCars();
 
-            if (carsFromRepo != null)
-                return Ok(carsFromRepo);
+                if (carsFromRepo != null)
+                    return Ok(carsFromRepo);
 
-            return BadRequest();
+                return BadRequest("Problem fetching cars full description list");
+            }
+            catch (System.Exception)
+            {
+                return BadRequest("Problem fetching cars full description list");
+            }
         }
 
         [HttpGet("full/{id}")]
         public async Task<IActionResult> GetCarFull(int id)
         {
-            var carFromRepo = await this.repo.GetCar(id);
-            if (carFromRepo != null)
-                return Ok(carFromRepo);
+            try
+            {
+                var carFromRepo = await this.repo.GetCar(id);
+                if (carFromRepo != null)
+                    return Ok(carFromRepo);
 
-            return BadRequest();
+                return BadRequest("Problem fetching car full description");
+            }
+            catch (System.Exception)
+            {
+                return BadRequest("Problem fetching car full description");
+            }
         }
 
         [HttpGet("user/all")]
         public async Task<IActionResult> GetAllCarsForUser()
         {
-            var carsFromRepo = await this.repo.GetAllCars();
-
-            if (carsFromRepo != null)
+            try
             {
-                var carsToReturn = this.mapper.Map<List<Car>, List<CarDetailsForUserDto>>(carsFromRepo);
-                return Ok(carsToReturn);
-            }
+                var carsFromRepo = await this.repo.GetAllCars();
 
-            return BadRequest();
+                if (carsFromRepo != null)
+                {
+                    var carsToReturn = this.mapper.Map<List<Car>, List<CarDetailsForUserDto>>(carsFromRepo);
+                    return Ok(carsToReturn);
+                }
+
+                return BadRequest("Problem fetching cars user description list");
+            }
+            catch (System.Exception)
+            {
+                return BadRequest("Problem fetching cars user description list");
+            }
         }
 
         [HttpGet("user/{id}")]
         public async Task<IActionResult> GetCarForUser(int id)
         {
-            var carFromRepo = await this.repo.GetCar(id);
-            if (carFromRepo != null)
+            try
             {
-                var carToReturn = this.mapper.Map<Car, CarDetailsForUserDto>(carFromRepo);
-                return Ok(carToReturn);
+                var carFromRepo = await this.repo.GetCar(id);
+                if (carFromRepo != null)
+                {
+                    var carToReturn = this.mapper.Map<Car, CarDetailsForUserDto>(carFromRepo);
+                    return Ok(carToReturn);
+                }
+
+                return BadRequest("Problem fetching car user description");
             }
-            
-            return BadRequest();
+            catch (System.Exception)
+            {
+                return BadRequest("Problem fetching car user description");
+            }
         }
 
 
