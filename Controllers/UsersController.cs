@@ -15,22 +15,24 @@ using PRAPI.Models;
  
 namespace PRAPI.Controllers
 {
-    // [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class UsersController : ControllerBase
     {
         private IUserService userService;
         private IMapper mapper;
+        private readonly ITokenService tokenService;
         private readonly AppSettings appSettings;
 
         public UsersController(
             IUserService userService,
             IMapper mapper,
-            IOptions<AppSettings> appSettings)
+            IOptions<AppSettings> appSettings,
+            ITokenService tokenService)
         {
             this.userService = userService;
             this.mapper = mapper;
+            this.tokenService = tokenService;
             this.appSettings = appSettings.Value;
         }
  
@@ -74,7 +76,7 @@ namespace PRAPI.Controllers
             {
                 this.userService.Create(user, userDto.Password);
                 return Ok();
-            } 
+            }
             catch(AppException ex)
             {
                 return BadRequest(new { message = ex.Message });
@@ -85,6 +87,10 @@ namespace PRAPI.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
+            var bearerToken = Request.Headers["Authorization"].ToString();
+            if (!this.tokenService.CheckIfAdmin(bearerToken))
+                return Unauthorized();
+                        
             var users =  this.userService.GetAll();
             var userDtos = this.mapper.Map<IList<UserDto>>(users);
             return Ok(userDtos);
@@ -94,6 +100,10 @@ namespace PRAPI.Controllers
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
+            var bearerToken = Request.Headers["Authorization"].ToString();
+            if (!this.tokenService.CheckIfAdminOrSameUser(bearerToken, id))
+                return Unauthorized();
+                
             var user =  this.userService.GetById(id);
             var userDto = this.mapper.Map<UserDto>(user);
             return Ok(userDto);
@@ -103,6 +113,10 @@ namespace PRAPI.Controllers
         [HttpPut("{id}")]
         public IActionResult Update(int id, [FromBody]UserDto userDto)
         {
+            var bearerToken = Request.Headers["Authorization"].ToString();
+            if (!this.tokenService.CheckIfAdminOrSameUser(bearerToken, id))
+                return Unauthorized();
+            
             var user = this.mapper.Map<User>(userDto);
             user.Id = id;
  
@@ -121,6 +135,10 @@ namespace PRAPI.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
+            var bearerToken = Request.Headers["Authorization"].ToString();
+            if (!this.tokenService.CheckIfAdminOrSameUser(bearerToken, id))
+                return Unauthorized();
+
             this.userService.Delete(id);
             return Ok();
         }

@@ -42,11 +42,9 @@ namespace PRAPI
             services.AddDbContext<DataContext>(options =>
                 options.UseMySql(Configuration.GetConnectionString("DefaultConnection")));
 
-            // configure strongly typed settings objects
             var appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
 
-            // configure jwt authentication
             var appSettings = appSettingsSection.Get<AppSettings>();
             var key = Encoding.ASCII.GetBytes(appSettings.Secret);
             services.AddAuthentication(x =>
@@ -65,7 +63,6 @@ namespace PRAPI
                         var user = userService.GetById(userId);
                         if (user == null)
                         {
-                            // return unauthorized if user no longer exists
                             context.Fail("Unauthorized");
                         }
                         return Task.CompletedTask;
@@ -84,12 +81,12 @@ namespace PRAPI
 
             services.Configure<CloudinarySettings>(Configuration.GetSection("CloudinarySettings"));
 
+            services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<ICarRepository, CarRepository>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ICloudinaryService, CloudinaryService>();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             if (env.IsDevelopment())

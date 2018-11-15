@@ -24,6 +24,7 @@ namespace PRAPI.Controllers
     [ApiController]
     public class CarsController : ControllerBase
     {
+        private readonly ITokenService tokenService;
         private readonly ICarRepository repo;
         private readonly IMapper mapper;
         private readonly IHostingEnvironment hostingEnvironment;
@@ -31,12 +32,14 @@ namespace PRAPI.Controllers
         private Cloudinary cloudinary;
 
         public CarsController(
+            ITokenService tokenService,
             ICarRepository repo,
             IMapper mapper,
             IHostingEnvironment hostingEnvironment,
             ICloudinaryService cloudinaryService)
         {
             this.mapper = mapper;
+            this.tokenService = tokenService;
             this.repo = repo;
             this.hostingEnvironment = hostingEnvironment;
             this.cloudinaryService = cloudinaryService;
@@ -46,6 +49,10 @@ namespace PRAPI.Controllers
         [HttpPost("create")]
         public async Task<IActionResult> CreateCar([FromForm]CarForCreateDto carForCreateDto)
         {
+            var bearerToken = Request.Headers["Authorization"].ToString();
+            if (!this.tokenService.CheckIfAdmin(bearerToken))
+                return Unauthorized();
+
             try
             {
                 var file = Request.Form.Files[0];
@@ -78,6 +85,10 @@ namespace PRAPI.Controllers
         [HttpGet("full/all")]
         public async Task<IActionResult> GetAllCarsFull()
         {
+            var bearerToken = Request.Headers["Authorization"].ToString();
+            if (!this.tokenService.CheckIfAdmin(bearerToken))
+                return Unauthorized();
+
             try
             {
                 var carsFromRepo = await this.repo.GetAllCars();
@@ -97,6 +108,10 @@ namespace PRAPI.Controllers
         [HttpGet("full/{id}")]
         public async Task<IActionResult> GetCarFull(int id)
         {
+            var bearerToken = Request.Headers["Authorization"].ToString();
+            if (!this.tokenService.CheckIfAdmin(bearerToken))
+                return Unauthorized();
+
             try
             {
                 var carFromRepo = await this.repo.GetCar(id);
@@ -157,6 +172,10 @@ namespace PRAPI.Controllers
         [HttpPut("update")]
         public async Task<IActionResult> UpdateCar([FromForm]CarDetailsFullDto carForUpdate)
         {
+            var bearerToken = Request.Headers["Authorization"].ToString();
+            if (!this.tokenService.CheckIfAdmin(bearerToken))
+                return Unauthorized();
+
             try
             {
                 if (Request.Form.Files.Count > 0)
@@ -203,6 +222,10 @@ namespace PRAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCar(int id)
         {
+            var bearerToken = Request.Headers["Authorization"].ToString();
+            if (!this.tokenService.CheckIfAdmin(bearerToken))
+                return Unauthorized();
+                
             try
             {
                 var carInRepo = await this.repo.GetCar(id);
