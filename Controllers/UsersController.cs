@@ -23,7 +23,7 @@ namespace PRAPI.Controllers
         private IUserService userService;
         private IMapper mapper;
         private readonly AppSettings appSettings;
- 
+
         public UsersController(
             IUserService userService,
             IMapper mapper,
@@ -59,7 +59,6 @@ namespace PRAPI.Controllers
             var token = tokenHandler.CreateToken(tokenDescriptor);
             var tokenString = tokenHandler.WriteToken(token);
  
-            // return basic user info (without password) and token to store client side
             return Ok(new {
                 Token = tokenString
             });
@@ -69,63 +68,61 @@ namespace PRAPI.Controllers
         [HttpPost("register")]
         public IActionResult Register([FromBody]UserDto userDto)
         {
-            // map dto to entity
             var user = this.mapper.Map<User>(userDto);
  
             try
             {
-                // save 
                 this.userService.Create(user, userDto.Password);
                 return Ok();
             } 
             catch(AppException ex)
             {
-                // return error message if there was an exception
                 return BadRequest(new { message = ex.Message });
             }
         }
  
-        // [HttpGet]
-        // public IActionResult GetAll()
-        // {
-        //     var users =  this.userService.GetAll();
-        //     var userDtos = this.mapper.Map<IList<UserDto>>(users);
-        //     return Ok(userDtos);
-        // }
+        [Authorize]
+        [HttpGet]
+        public IActionResult GetAll()
+        {
+            var users =  this.userService.GetAll();
+            var userDtos = this.mapper.Map<IList<UserDto>>(users);
+            return Ok(userDtos);
+        }
  
-        // [HttpGet("{id}")]
-        // public IActionResult GetById(int id)
-        // {
-        //     var user =  this.userService.GetById(id);
-        //     var userDto = this.mapper.Map<UserDto>(user);
-        //     return Ok(userDto);
-        // }
+        [Authorize]
+        [HttpGet("{id}")]
+        public IActionResult GetById(int id)
+        {
+            var user =  this.userService.GetById(id);
+            var userDto = this.mapper.Map<UserDto>(user);
+            return Ok(userDto);
+        }
  
+        [Authorize]
         [HttpPut("{id}")]
         public IActionResult Update(int id, [FromBody]UserDto userDto)
         {
-            // map dto to entity and set id
             var user = this.mapper.Map<User>(userDto);
             user.Id = id;
  
             try
             {
-                // save 
                 this.userService.Update(user, userDto.Password);
                 return Ok();
             } 
             catch(AppException ex)
             {
-                // return error message if there was an exception
                 return BadRequest(new { message = ex.Message });
             }
         }
  
-        // [HttpDelete("{id}")]
-        // public IActionResult Delete(int id)
-        // {
-        //     this.userService.Delete(id);
-        //     return Ok();
-        // }
+        [Authorize]
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
+        {
+            this.userService.Delete(id);
+            return Ok();
+        }
     }
 }
