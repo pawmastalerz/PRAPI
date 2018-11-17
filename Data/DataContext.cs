@@ -9,5 +9,6 @@ namespace PRAPI.Data
 
         public DbSet<Car> Cars { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<Order> Orders { get; set; }
     }
 }

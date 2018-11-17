@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 using PRAPI.Services;
 using PRAPI.Dtos;
 using PRAPI.Models;
- 
+
 namespace PRAPI.Controllers
 {
     [ApiController]
@@ -35,21 +35,21 @@ namespace PRAPI.Controllers
             this.tokenService = tokenService;
             this.appSettings = appSettings.Value;
         }
- 
+
         [AllowAnonymous]
         [HttpPost("login")]
         public IActionResult Login([FromBody]UserDto userDto)
         {
             var user = this.userService.Login(userDto.Username, userDto.Password);
- 
+
             if (user == null)
                 return Unauthorized();
- 
+
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(this.appSettings.Secret);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new Claim[] 
+                Subject = new ClaimsIdentity(new Claim[]
                 {
                     new Claim(ClaimTypes.Name, user.Id.ToString())
                 }),
@@ -60,29 +60,30 @@ namespace PRAPI.Controllers
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
             var tokenString = tokenHandler.WriteToken(token);
- 
-            return Ok(new {
+
+            return Ok(new
+            {
                 Token = tokenString
             });
         }
- 
+
         [AllowAnonymous]
         [HttpPost("register")]
         public IActionResult Register([FromBody]UserDto userDto)
         {
             var user = this.mapper.Map<User>(userDto);
- 
+
             try
             {
                 this.userService.Create(user, userDto.Password);
                 return Ok();
             }
-            catch(AppException ex)
+            catch (AppException ex)
             {
                 return BadRequest(new { message = ex.Message });
             }
         }
- 
+
         [Authorize]
         [HttpGet]
         public IActionResult GetAll()
@@ -90,12 +91,12 @@ namespace PRAPI.Controllers
             var bearerToken = Request.Headers["Authorization"].ToString();
             if (!this.tokenService.CheckIfAdmin(bearerToken))
                 return Unauthorized();
-                        
-            var users =  this.userService.GetAll();
+
+            var users = this.userService.GetAll();
             var userDtos = this.mapper.Map<IList<UserDto>>(users);
             return Ok(userDtos);
         }
- 
+
         [Authorize]
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
@@ -103,12 +104,12 @@ namespace PRAPI.Controllers
             var bearerToken = Request.Headers["Authorization"].ToString();
             if (!this.tokenService.CheckIfAdminOrSameUser(bearerToken, id))
                 return Unauthorized();
-                
-            var user =  this.userService.GetById(id);
+
+            var user = this.userService.GetById(id);
             var userDto = this.mapper.Map<UserDto>(user);
             return Ok(userDto);
         }
- 
+
         [Authorize]
         [HttpPut("{id}")]
         public IActionResult Update(int id, [FromBody]UserDto userDto)
@@ -116,21 +117,21 @@ namespace PRAPI.Controllers
             var bearerToken = Request.Headers["Authorization"].ToString();
             if (!this.tokenService.CheckIfAdminOrSameUser(bearerToken, id))
                 return Unauthorized();
-            
+
             var user = this.mapper.Map<User>(userDto);
             user.Id = id;
- 
+
             try
             {
                 this.userService.Update(user, userDto.Password);
                 return Ok();
-            } 
-            catch(AppException ex)
+            }
+            catch (AppException ex)
             {
                 return BadRequest(new { message = ex.Message });
             }
         }
- 
+
         [Authorize]
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
