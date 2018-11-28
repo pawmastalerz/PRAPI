@@ -11,6 +11,8 @@ namespace PRAPI.Dtos
         public string Body { get; set; }
         public string Description { get; set; }
         public int Doors { get; set; }
+        public string Fuel { get; set; }
+        public string Transmission { get; set; }
         public int Price { get; set; }
         public int Year { get; set; }
         public float LP100Km { get; set; }
