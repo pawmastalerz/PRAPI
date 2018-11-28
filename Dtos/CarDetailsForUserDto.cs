@@ -8,7 +8,7 @@ namespace PRAPI.Dtos
         public string License { get; set; }
         public string Brand { get; set; }
         public string Model { get; set; }
-        public string Class { get; set; }
+        public string Body { get; set; }
         public string Description { get; set; }
         public int Doors { get; set; }
         public int Price { get; set; }
