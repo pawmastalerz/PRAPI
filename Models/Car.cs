@@ -20,7 +20,7 @@ namespace PRAPI.Models
         public int Price { get; set; }
         public string PublicId { get; set; }
         public string PhotoUrl { get; set; }
-        public DateTime ReservedFrom { get; set; }
-        public DateTime ReservedTo { get; set; }
+        public DateTime? ReservedFrom { get; set; }
+        public DateTime? ReservedTo { get; set; }
     }
 }
