@@ -29,6 +29,7 @@ namespace PRAPI.Data
         public async Task<List<Car>> GetAllCars()
         {
             return await this.context.Cars
+                .OrderBy(c => c.Model)
                 .ToListAsync();
         }
 
@@ -48,6 +49,7 @@ namespace PRAPI.Data
                         )
                     )
                 )
+                .OrderBy(c => c.Model)
                 .ToListAsync();
         }
 
