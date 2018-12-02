@@ -18,7 +18,7 @@ namespace PRAPI.Data
             this.context = context;
             this.hostingEnvironment = hostingEnvironment;
         }
-        
+
         public bool CreateCar(Car car)
         {
             this.context.Cars.Add(car);
@@ -29,6 +29,25 @@ namespace PRAPI.Data
         public async Task<List<Car>> GetAllCars()
         {
             return await this.context.Cars
+                .ToListAsync();
+        }
+
+        public async Task<List<Car>> SearchForCarsForUser(SearchParams searchParams)
+        {
+            return await this.context.Cars
+                .Where(c =>
+                    (c.Model == searchParams.Model) &&
+                    (
+                        (
+                            searchParams.ReservedFrom < c.ReservedFrom &&
+                            searchParams.ReservedTo < c.ReservedFrom
+                        ) ||
+                        (
+                        searchParams.ReservedFrom > c.ReservedTo &&
+                        searchParams.ReservedTo > c.ReservedFrom
+                        )
+                    )
+                )
                 .ToListAsync();
         }
 

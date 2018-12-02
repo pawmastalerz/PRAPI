@@ -147,6 +147,30 @@ namespace PRAPI.Controllers
             }
         }
 
+        [HttpPost("user/search")]
+        public async Task<IActionResult> SearchForCarsForUser([FromBody] SearchParams searchParams)
+        {
+            try
+            {
+                if (searchParams.ReservedFrom > searchParams.ReservedTo)
+                    return BadRequest("Reservation's start is bigger than reservation's end");
+
+                var carsFromRepo = await this.repo.SearchForCarsForUser(searchParams);
+
+                if (carsFromRepo != null)
+                {
+                    var carsToReturn = this.mapper.Map<List<Car>, List<CarDetailsForUserDto>>(carsFromRepo);
+                    return Ok(carsToReturn);
+                }
+
+                return BadRequest("Problem fetching searched cars for user");
+            }
+            catch (System.Exception)
+            {
+                return BadRequest("Problem fetching searched cars for user");
+            }
+        }
+
         [HttpGet("user/{id}")]
         public async Task<IActionResult> GetCarForUser(int id)
         {
@@ -166,7 +190,6 @@ namespace PRAPI.Controllers
                 return BadRequest("Problem fetching car user description");
             }
         }
-
 
         [Authorize]
         [HttpPut("update")]
@@ -225,7 +248,7 @@ namespace PRAPI.Controllers
             var bearerToken = Request.Headers["Authorization"].ToString();
             if (!this.tokenService.CheckIfAdmin(bearerToken))
                 return Unauthorized();
-                
+
             try
             {
                 var carInRepo = await this.repo.GetCar(id);
