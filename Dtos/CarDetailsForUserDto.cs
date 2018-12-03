@@ -18,7 +18,5 @@ namespace PRAPI.Dtos
         public float LP100Km { get; set; }
         public string PhotoUrl { get; set; }
         public string AirConditioned { get; set; }
-        public DateTime ReservedFrom { get; set; }
-        public DateTime ReservedTo { get; set; }
     }
 }

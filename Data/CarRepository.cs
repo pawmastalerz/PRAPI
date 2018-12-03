@@ -36,19 +36,19 @@ namespace PRAPI.Data
         public async Task<List<Car>> SearchForCarsForUser(SearchParams searchParams)
         {
             return await this.context.Cars
-                .Where(c =>
-                    (c.Model == searchParams.Model) &&
-                    (
-                        (
-                            searchParams.ReservedFrom < c.ReservedFrom &&
-                            searchParams.ReservedTo < c.ReservedFrom
-                        ) ||
-                        (
-                        searchParams.ReservedFrom > c.ReservedTo &&
-                        searchParams.ReservedTo > c.ReservedFrom
-                        )
-                    )
-                )
+                // .Where(c =>
+                //     (c.Model == searchParams.Model) &&
+                //     (
+                //         (
+                //             searchParams.ReservedFrom < c.ReservedFrom &&
+                //             searchParams.ReservedTo < c.ReservedFrom
+                //         ) ||
+                //         (
+                //         searchParams.ReservedFrom > c.ReservedTo &&
+                //         searchParams.ReservedTo > c.ReservedFrom
+                //         )
+                //     )
+                // )
                 .OrderBy(c => c.Model)
                 .ToListAsync();
         }
