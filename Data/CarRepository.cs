@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -35,22 +36,21 @@ namespace PRAPI.Data
 
         public async Task<List<Car>> SearchForCarsForUser(SearchParams searchParams)
         {
-            return await this.context.Cars
-                // .Where(c =>
-                //     (c.Model == searchParams.Model) &&
-                //     (
-                //         (
-                //             searchParams.ReservedFrom < c.ReservedFrom &&
-                //             searchParams.ReservedTo < c.ReservedFrom
-                //         ) ||
-                //         (
-                //         searchParams.ReservedFrom > c.ReservedTo &&
-                //         searchParams.ReservedTo > c.ReservedFrom
-                //         )
-                //     )
-                // )
-                .OrderBy(c => c.Model)
-                .ToListAsync();
+            var sql = from c in this.context.Cars
+                      where (c.Model == searchParams.Model) && (
+                          !this.context.Orders.Any(o => (
+                              ((o.ReservedFrom < searchParams.ReservedFrom) &&
+                              (o.ReservedTo >= searchParams.ReservedFrom)) ||
+                              ((o.ReservedFrom <= searchParams.ReservedTo) &&
+                              (o.ReservedTo > searchParams.ReservedTo)) ||
+                              ((o.ReservedFrom >= searchParams.ReservedFrom) &&
+                              (o.ReservedTo <= searchParams.ReservedTo))
+                          ))
+                      )
+                      orderby c.Model
+                      select c;
+
+            return await sql.ToListAsync();
         }
 
         public async Task<Car> GetCar(int id)

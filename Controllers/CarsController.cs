@@ -158,10 +158,7 @@ namespace PRAPI.Controllers
                 var carsFromRepo = await this.repo.SearchForCarsForUser(searchParams);
 
                 if (carsFromRepo != null)
-                {
-                    var carsToReturn = this.mapper.Map<List<Car>, List<CarDetailsForUserDto>>(carsFromRepo);
-                    return Ok(carsToReturn);
-                }
+                    return Ok(carsFromRepo);
 
                 return BadRequest("Problem fetching searched cars for user");
             }
