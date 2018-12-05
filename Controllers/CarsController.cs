@@ -147,6 +147,24 @@ namespace PRAPI.Controllers
             }
         }
 
+        [HttpGet("models")]
+        public async Task<IActionResult> GetAllCarModels()
+        {
+            try
+            {
+                var carsFromRepo = await this.repo.GetAllCarModels();
+
+                if (carsFromRepo != null)
+                    return Ok(carsFromRepo);
+
+                return BadRequest("Problem fetching all car models list");
+            }
+            catch (System.Exception)
+            {
+                return BadRequest("Problem fetching all car models list");
+            }
+        }
+
         [HttpPost("user/search")]
         public async Task<IActionResult> SearchForCarsForUser([FromBody] SearchParams searchParams)
         {

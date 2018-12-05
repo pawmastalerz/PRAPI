@@ -34,6 +34,14 @@ namespace PRAPI.Data
                 .ToListAsync();
         }
 
+        public async Task<List<Car>> GetAllCarModels()
+        {
+            return await this.context.Cars
+                .GroupBy(c => c.Model)
+                .Select(g => g.First())
+                .ToListAsync();
+        }
+
         public async Task<List<Car>> SearchForCarsForUser(SearchParams searchParams)
         {
             var sql = from c in this.context.Cars
