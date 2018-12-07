@@ -106,7 +106,7 @@ namespace PRAPI.Controllers
                 return Unauthorized();
 
             var user = this.userService.GetById(id);
-            var userDto = this.mapper.Map<UserDto>(user);
+            var userDto = this.mapper.Map<UserDataDto>(user);
             return Ok(userDto);
         }
 
