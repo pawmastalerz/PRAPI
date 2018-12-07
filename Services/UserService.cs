@@ -62,7 +62,7 @@ namespace PRAPI.Services
             return user;
         }
 
-        public void Update(User userParam, string password = null)
+        public void Update(User userParam, string currentPassword = null, string password = null)
         {
             var user = this.context.Users.Find(userParam.Id);
 
@@ -76,9 +76,16 @@ namespace PRAPI.Services
             }
 
             user.Username = userParam.Username;
+            user.City = userParam.City;
+            user.Street = userParam.Street;
+            user.StreetNumber = userParam.StreetNumber;
+            user.PostalCode = userParam.PostalCode;
 
             if (!string.IsNullOrWhiteSpace(password))
             {
+                if (!VerifyPasswordHash(currentPassword, user.PasswordHash, user.PasswordSalt))
+                    throw new AppException("Podano niepoprawne hasło");
+
                 byte[] passwordHash, passwordSalt;
                 CreatePasswordHash(password, out passwordHash, out passwordSalt);
 

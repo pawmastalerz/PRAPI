@@ -120,11 +120,10 @@ namespace PRAPI.Controllers
 
             var user = this.mapper.Map<User>(userDto);
             user.Id = id;
-            user.Username = userDto.Username;
 
             try
             {
-                this.userService.Update(user, userDto.Password);
+                this.userService.Update(user, userDto.CurrentPassword, userDto.Password);
                 return Ok();
             }
             catch (AppException ex)
