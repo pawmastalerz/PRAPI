@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 using PRAPI.Services;
 using PRAPI.Dtos;
 using PRAPI.Models;
+using System.Security.Authentication;
 
 namespace PRAPI.Controllers
 {
@@ -125,6 +126,10 @@ namespace PRAPI.Controllers
             {
                 this.userService.Update(user, userDto.CurrentPassword, userDto.Password);
                 return Ok();
+            }
+            catch (InvalidCredentialException) 
+            {
+                return Unauthorized();
             }
             catch (AppException ex)
             {

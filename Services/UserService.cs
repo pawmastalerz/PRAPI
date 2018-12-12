@@ -4,6 +4,7 @@ using System.Linq;
 using PRAPI.Models;
 using PRAPI.Helpers;
 using PRAPI.Data;
+using System.Security.Authentication;
 
 namespace PRAPI.Services
 {
@@ -75,16 +76,21 @@ namespace PRAPI.Services
                     throw new AppException("Username " + userParam.Username + " is already taken");
             }
 
-            user.Username = userParam.Username;
-            user.City = userParam.City;
-            user.Street = userParam.Street;
-            user.StreetNumber = userParam.StreetNumber;
-            user.PostalCode = userParam.PostalCode;
+            if (!string.IsNullOrWhiteSpace(userParam.Username))
+                user.Username = userParam.Username;
+            if (!string.IsNullOrWhiteSpace(userParam.City))
+                user.City = userParam.City;
+            if (!string.IsNullOrWhiteSpace(userParam.Street))
+                user.Street = userParam.Street;
+            if (!string.IsNullOrWhiteSpace(userParam.StreetNumber))
+                user.StreetNumber = userParam.StreetNumber;
+            if (!string.IsNullOrWhiteSpace(userParam.PostalCode))
+                user.PostalCode = userParam.PostalCode;
 
             if (!string.IsNullOrWhiteSpace(password))
             {
                 if (!VerifyPasswordHash(currentPassword, user.PasswordHash, user.PasswordSalt))
-                    throw new AppException("Podano niepoprawne hasło");
+                    throw new InvalidCredentialException();
 
                 byte[] passwordHash, passwordSalt;
                 CreatePasswordHash(password, out passwordHash, out passwordSalt);
