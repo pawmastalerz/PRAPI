@@ -86,37 +86,11 @@ namespace PRAPI.Controllers
         }
 
         [Authorize]
-        [HttpGet]
-        public IActionResult GetAll()
-        {
-            var bearerToken = Request.Headers["Authorization"].ToString();
-            if (!this.tokenService.CheckIfAdmin(bearerToken))
-                return Unauthorized();
-
-            var users = this.userService.GetAll();
-            var userDtos = this.mapper.Map<IList<UserDto>>(users);
-            return Ok(userDtos);
-        }
-
-        [Authorize]
-        [HttpGet("{id}")]
-        public IActionResult GetById(int id)
-        {
-            var bearerToken = Request.Headers["Authorization"].ToString();
-            if (!this.tokenService.CheckIfAdminOrSameUser(bearerToken, id))
-                return Unauthorized();
-
-            var user = this.userService.GetById(id);
-            var userDto = this.mapper.Map<UserDataDto>(user);
-            return Ok(userDto);
-        }
-
-        [Authorize]
         [HttpPut("{id}")]
         public IActionResult Update(int id, [FromBody]UserDto userDto)
         {
             var bearerToken = Request.Headers["Authorization"].ToString();
-            if (!this.tokenService.CheckIfAdminOrSameUser(bearerToken, id))
+            if (!this.tokenService.CheckIfSameUser(bearerToken, id))
                 return Unauthorized();
 
             var user = this.mapper.Map<User>(userDto);
@@ -142,7 +116,7 @@ namespace PRAPI.Controllers
         public IActionResult Delete(int id)
         {
             var bearerToken = Request.Headers["Authorization"].ToString();
-            if (!this.tokenService.CheckIfAdminOrSameUser(bearerToken, id))
+            if (!this.tokenService.CheckIfSameUser(bearerToken, id))
                 return Unauthorized();
 
             this.userService.Delete(id);

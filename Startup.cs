@@ -79,12 +79,9 @@ namespace PRAPI
                 };
             });
 
-            services.Configure<CloudinarySettings>(Configuration.GetSection("CloudinarySettings"));
-
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<ICarRepository, CarRepository>();
             services.AddScoped<IUserService, UserService>();
-            services.AddScoped<ICloudinaryService, CloudinaryService>();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
