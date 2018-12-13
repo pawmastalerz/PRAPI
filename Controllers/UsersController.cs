@@ -86,6 +86,19 @@ namespace PRAPI.Controllers
         }
 
         [Authorize]
+        [HttpGet("{id}")]
+        public IActionResult GetById(int id)
+        {
+            var bearerToken = Request.Headers["Authorization"].ToString();
+            if (!this.tokenService.CheckIfSameUser(bearerToken, id))
+                return Unauthorized();
+
+            var user = this.userService.GetById(id);
+            var userDto = this.mapper.Map<UserDataDto>(user);
+            return Ok(userDto);
+        }
+
+        [Authorize]
         [HttpPut("{id}")]
         public IActionResult Update(int id, [FromBody]UserDto userDto)
         {
@@ -101,7 +114,7 @@ namespace PRAPI.Controllers
                 this.userService.Update(user, userDto.CurrentPassword, userDto.Password);
                 return Ok();
             }
-            catch (InvalidCredentialException) 
+            catch (InvalidCredentialException)
             {
                 return Unauthorized();
             }
