@@ -87,8 +87,10 @@ namespace PRAPI.Controllers
             {
                 if (searchParams.ReservedFrom > searchParams.ReservedTo)
                     return BadRequest("Reservation's start is bigger than reservation's end");
-                if (searchParams.ReservedFrom < DateTime.Now.AddDays(-1))
+                if (searchParams.ReservedFrom < DateTime.Now.AddDays(-1) || searchParams.ReservedTo < DateTime.Now.AddDays(-1))
                     return BadRequest("Reservation's date is lower than current time");
+                if (searchParams.ReservedFrom > DateTime.Now.AddMonths(6) || searchParams.ReservedTo > DateTime.Now.AddMonths(6))
+                    return BadRequest("Reservation's date is bigger than 6 months");
 
                 var carsFromRepo = await this.repo.SearchForCarsForUser(searchParams);
 

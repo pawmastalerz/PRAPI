@@ -50,6 +50,8 @@ namespace PRAPI.Controllers
                     return BadRequest("Reservation's start is bigger than reservation's end");
                 if (orderParams.ReservedFrom < DateTime.Now.AddDays(-1) || orderParams.ReservedTo < DateTime.Now.AddDays(-1))
                     return BadRequest("Reservation's date is lower than current time");
+                if (orderParams.ReservedFrom > DateTime.Now.AddMonths(6) || orderParams.ReservedTo > DateTime.Now.AddMonths(6))
+                    return BadRequest("Reservation's date is bigger than 6 months");
 
                 var dayDifference = (orderParams.ReservedTo - orderParams.ReservedFrom).TotalDays;
                 var carFromRepo = await this.carRepo.GetCar(orderParams.Id);
