@@ -81,6 +81,7 @@ namespace PRAPI
 
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<ICarRepository, CarRepository>();
+            services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<IUserService, UserService>();
         }
 

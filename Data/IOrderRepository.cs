@@ -7,11 +7,10 @@ namespace PRAPI.Data
 {
     public interface IOrderRepository
     {
+        decimal CalculatePrice(double dayDifference, double price);
         bool CreateOrder(Order order);
-        Task<Order> GetOrder(int id);
-        Task<List<Order>> GetAllOrders();
-        Task<List<Order>> SearchForUserOrders(SearchParams searchParams);
-        void Delete<T>(T entity) where T : class;
+        Task<List<Order>> GetAllOrdersForUser(int id);
+        Task<List<Order>> GetCurrentOrdersForUser(int id);
         Task<bool> SaveAll();
     }
 }

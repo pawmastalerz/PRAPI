@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -19,56 +20,39 @@ namespace PRAPI.Data
             this.hostingEnvironment = hostingEnvironment;
         }
 
-        public bool CreateOrder(Order order)
-        {
-            this.context.Orders.Add(order);
-            this.context.SaveChanges();
-            return true;
-        }
-
-        public async Task<List<Order>> GetAllOrders()
-        {
-            return await this.context.Orders
-                .OrderBy(o => o.OrderId)
-                .ToListAsync();
-        }
-
-        public async Task<List<Order>> SearchForUserOrders(SearchParams searchParams)
-        {
-            return await this.context.Orders
-                // .Where(c =>
-                //     (c.Model == searchParams.Model) &&
-                //     (
-                //         (
-                //             searchParams.ReservedFrom < c.ReservedFrom &&
-                //             searchParams.ReservedTo < c.ReservedFrom
-                //         ) ||
-                //         (
-                //         searchParams.ReservedFrom > c.ReservedTo &&
-                //         searchParams.ReservedTo > c.ReservedFrom
-                //         )
-                //     )
-                // )
-                .OrderBy(o => o.OrderId)
-                .ToListAsync();
-        }
-
-        public async Task<Order> GetOrder(int id)
-        {
-            var orderToReturn = await this.context.Orders
-                .FirstOrDefaultAsync(o => o.OrderId == id);
-            return orderToReturn;
-        }
-
-        public void Delete<T>(T entity) where T : class
-        {
-            this.context.Remove(entity);
-        }
-
         public async Task<bool> SaveAll()
         {
             var saved = await this.context.SaveChangesAsync() > 0;
             return saved;
+        }
+
+        public decimal CalculatePrice(double dayDifference, double price)
+        {
+            switch (dayDifference)
+            {
+                case 0:
+                    return Math.Round((decimal)(price), 2, MidpointRounding.AwayFromZero);
+                case 1:
+                case 2:
+                    return Math.Round((decimal)((price * dayDifference) * 0.95), 2, MidpointRounding.AwayFromZero);
+                default:
+                    return Math.Round((decimal)((price * dayDifference) * 0.92), 2, MidpointRounding.AwayFromZero);
+            }
+        }
+
+        public bool CreateOrder(Order order)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<List<Order>> GetAllOrdersForUser(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<List<Order>> GetCurrentOrdersForUser(int id)
+        {
+            throw new NotImplementedException();
         }
     }
 }
