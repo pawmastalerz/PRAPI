@@ -42,7 +42,30 @@ namespace PRAPI.Data
 
         public bool CreateOrder(Order order)
         {
-            throw new NotImplementedException();
+            var sql = from o in this.context.Orders
+                      where (this.context.Orders.Any(q => (
+                            (q.CarId == order.CarId) &&
+                            (q.UserId == order.UserId) && (
+                            ((q.ReservedFrom < order.ReservedFrom) &&
+                            (q.ReservedTo >= order.ReservedFrom)) ||
+                            ((q.ReservedFrom <= order.ReservedTo) &&
+                            (q.ReservedTo > order.ReservedTo)) ||
+                            ((q.ReservedFrom >= order.ReservedFrom) &&
+                            (q.ReservedTo <= order.ReservedTo))
+                            )
+                        ))
+                      )
+                      select o;
+
+            var result = sql.ToList();
+
+            if (result.Count == 0)
+            {
+                this.context.Orders.Add(order);
+                this.context.SaveChanges();
+                return true;
+            }
+            return false;
         }
 
         public Task<List<Order>> GetAllOrdersForUser(int id)

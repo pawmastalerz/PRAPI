@@ -44,6 +44,7 @@ namespace PRAPI.Controllers
             this.hostingEnvironment = hostingEnvironment;
         }
 
+        [AllowAnonymous]
         [HttpPost("cprice")]
         public async Task<IActionResult> CalculatePrice([FromBody] OrderParams orderParams)
         {
@@ -57,7 +58,7 @@ namespace PRAPI.Controllers
                     return BadRequest("Reservation's date is bigger than 6 months");
 
                 var dayDifference = (orderParams.ReservedTo - orderParams.ReservedFrom).TotalDays;
-                var carFromRepo = await this.carRepo.GetCar(orderParams.Id);
+                var carFromRepo = await this.carRepo.GetCar(orderParams.CarId);
                 var calculatedPrice = this.repo.CalculatePrice(dayDifference, carFromRepo.Price);
 
                 return Ok(calculatedPrice);
@@ -65,6 +66,36 @@ namespace PRAPI.Controllers
             catch (System.Exception)
             {
                 return BadRequest("Problem calculating price");
+            }
+        }
+
+        [Authorize]
+        [HttpPut("create")]
+        public IActionResult CreateOrder([FromBody] OrderParams orderParams)
+        {
+            try
+            {
+                if (orderParams.ReservedFrom > orderParams.ReservedTo)
+                    return BadRequest("Reservation's start is bigger than reservation's end");
+                else if (orderParams.ReservedFrom < DateTime.Now.AddDays(-1) || orderParams.ReservedTo < DateTime.Now.AddDays(-1))
+                    return BadRequest("Reservation's date is lower than current time");
+                else if (orderParams.ReservedFrom > DateTime.Now.AddMonths(6) || orderParams.ReservedTo > DateTime.Now.AddMonths(6))
+                    return BadRequest("Reservation's date is bigger than 6 months");
+
+                var bearerToken = Request.Headers["Authorization"].ToString();
+                if (!this.tokenService.CheckIfSameUser(bearerToken, orderParams.UserId))
+                    return Unauthorized();
+
+                var newOrder = this.mapper.Map<Order>(orderParams);
+
+                if (this.repo.CreateOrder(newOrder))
+                    return Ok();
+
+                return BadRequest("Requested car is unavaliable");
+            }
+            catch (AppException ex)
+            {
+                return BadRequest(new { message = ex.Message });
             }
         }
     }

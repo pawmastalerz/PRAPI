@@ -6,6 +6,7 @@ namespace PRAPI.Models
     {
         public DateTime ReservedFrom { get; set; }
         public DateTime ReservedTo { get; set; }
-        public int Id { get; set; }
+        public int CarId { get; set; }
+        public int UserId { get; set; }
     }
 }

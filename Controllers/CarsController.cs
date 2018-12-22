@@ -41,6 +41,7 @@ namespace PRAPI.Controllers
             this.hostingEnvironment = hostingEnvironment;
         }
 
+        [AllowAnonymous]
         [HttpGet("user/all")]
         public async Task<IActionResult> GetAllCarsForUser()
         {
@@ -62,6 +63,7 @@ namespace PRAPI.Controllers
             }
         }
 
+        [AllowAnonymous]
         [HttpGet("models")]
         public async Task<IActionResult> GetAllCarModels()
         {
@@ -80,6 +82,7 @@ namespace PRAPI.Controllers
             }
         }
 
+        [AllowAnonymous]
         [HttpPost("user/search")]
         public async Task<IActionResult> SearchForCarsForUser([FromBody] SearchParams searchParams)
         {
@@ -105,6 +108,7 @@ namespace PRAPI.Controllers
             }
         }
 
+        [AllowAnonymous]
         [HttpGet("user/{id}")]
         public async Task<IActionResult> GetCarForUser(int id)
         {
