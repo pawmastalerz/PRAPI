@@ -34,9 +34,9 @@ namespace PRAPI.Data
                     return Math.Round((decimal)(price), 2, MidpointRounding.AwayFromZero);
                 case 1:
                 case 2:
-                    return Math.Round((decimal)((price * dayDifference) * 0.95), 2, MidpointRounding.AwayFromZero);
+                    return Math.Round((decimal)((price * (dayDifference + 1)) * 0.95), 2, MidpointRounding.AwayFromZero);
                 default:
-                    return Math.Round((decimal)((price * dayDifference) * 0.92), 2, MidpointRounding.AwayFromZero);
+                    return Math.Round((decimal)((price * (dayDifference + 1)) * 0.92), 2, MidpointRounding.AwayFromZero);
             }
         }
 
