@@ -52,7 +52,7 @@ namespace PRAPI.Controllers
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(ClaimTypes.Name, user.Id.ToString())
+                    new Claim(ClaimTypes.Name, user.UserId.ToString())
                 }),
                 Expires = DateTime.UtcNow.AddMinutes(480),
                 NotBefore = DateTime.UtcNow,
@@ -107,7 +107,7 @@ namespace PRAPI.Controllers
                 return Unauthorized();
 
             var user = this.mapper.Map<User>(userDto);
-            user.Id = id;
+            user.UserId = id;
 
             try
             {

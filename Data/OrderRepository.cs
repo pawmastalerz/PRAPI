@@ -61,6 +61,7 @@ namespace PRAPI.Data
 
             if (result.Count == 0)
             {
+                order.IsReturned = "no";
                 this.context.Orders.Add(order);
                 this.context.SaveChanges();
                 return true;
@@ -73,9 +74,14 @@ namespace PRAPI.Data
             throw new NotImplementedException();
         }
 
-        public Task<List<Order>> GetCurrentOrdersForUser(int id)
+        public async Task<List<Order>> GetCurrentOrdersForUser(int userId)
         {
-            throw new NotImplementedException();
+            var orders = await this.context.Orders
+            .Where(o => o.IsReturned == "no")
+            .Include(o => o.CarOrdered)
+            .ToListAsync();
+            
+            return orders;
         }
     }
 }

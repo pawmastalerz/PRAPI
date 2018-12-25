@@ -19,7 +19,7 @@ namespace PRAPI.Migrations
 
             modelBuilder.Entity("PRAPI.Models.Car", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("CarId")
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("AirConditioned");
@@ -46,7 +46,7 @@ namespace PRAPI.Migrations
 
                     b.Property<int>("Year");
 
-                    b.HasKey("Id");
+                    b.HasKey("CarId");
 
                     b.ToTable("Cars");
                 });
@@ -77,7 +77,7 @@ namespace PRAPI.Migrations
 
             modelBuilder.Entity("PRAPI.Models.User", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("UserId")
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("City");
@@ -96,14 +96,14 @@ namespace PRAPI.Migrations
 
                     b.Property<string>("Username");
 
-                    b.HasKey("Id");
+                    b.HasKey("UserId");
 
                     b.ToTable("Users");
                 });
 
             modelBuilder.Entity("PRAPI.Models.Order", b =>
                 {
-                    b.HasOne("PRAPI.Models.Car", "OrderedCar")
+                    b.HasOne("PRAPI.Models.Car", "CarOrdered")
                         .WithMany()
                         .HasForeignKey("CarId")
                         .OnDelete(DeleteBehavior.Cascade);

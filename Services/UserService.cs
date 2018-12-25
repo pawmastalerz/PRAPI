@@ -38,9 +38,9 @@ namespace PRAPI.Services
             return this.context.Users;
         }
 
-        public User GetById(int id)
+        public User GetById(int userId)
         {
-            return this.context.Users.Find(id);
+            return this.context.Users.Find(userId);
         }
 
         public User Create(User user, string password)
@@ -65,7 +65,7 @@ namespace PRAPI.Services
 
         public void Update(User userParam, string currentPassword = null, string password = null)
         {
-            var user = this.context.Users.Find(userParam.Id);
+            var user = this.context.Users.Find(userParam.UserId);
 
             if (user == null)
                 throw new AppException("User not found");
@@ -103,9 +103,9 @@ namespace PRAPI.Services
             this.context.SaveChanges();
         }
 
-        public void Delete(int id)
+        public void Delete(int userId)
         {
-            var user = this.context.Users.Find(id);
+            var user = this.context.Users.Find(userId);
             if (user != null)
             {
                 this.context.Users.Remove(user);

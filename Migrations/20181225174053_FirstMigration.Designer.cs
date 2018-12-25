@@ -9,8 +9,8 @@ using PRAPI.Data;
 namespace PRAPI.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20181119165042_CarDetailsMigration")]
-    partial class CarDetailsMigration
+    [Migration("20181225174053_FirstMigration")]
+    partial class FirstMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -21,7 +21,7 @@ namespace PRAPI.Migrations
 
             modelBuilder.Entity("PRAPI.Models.Car", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("CarId")
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("AirConditioned");
@@ -38,27 +38,17 @@ namespace PRAPI.Migrations
 
                     b.Property<float>("LP100Km");
 
-                    b.Property<string>("License");
-
                     b.Property<string>("Model");
-
-                    b.Property<DateTime>("NextInsurancePayment");
-
-                    b.Property<DateTime>("NextTechReview");
 
                     b.Property<string>("PhotoUrl");
 
                     b.Property<int>("Price");
 
-                    b.Property<string>("PublicId");
-
-                    b.Property<DateTime>("ReservedFrom");
-
-                    b.Property<DateTime>("ReservedTo");
+                    b.Property<string>("Transmission");
 
                     b.Property<int>("Year");
 
-                    b.HasKey("Id");
+                    b.HasKey("CarId");
 
                     b.ToTable("Cars");
                 });
@@ -70,7 +60,11 @@ namespace PRAPI.Migrations
 
                     b.Property<int>("CarId");
 
-                    b.Property<string>("IsPaid");
+                    b.Property<string>("IsReturned");
+
+                    b.Property<DateTime?>("ReservedFrom");
+
+                    b.Property<DateTime?>("ReservedTo");
 
                     b.Property<int>("UserId");
 
@@ -85,7 +79,7 @@ namespace PRAPI.Migrations
 
             modelBuilder.Entity("PRAPI.Models.User", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("UserId")
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("City");
@@ -104,14 +98,14 @@ namespace PRAPI.Migrations
 
                     b.Property<string>("Username");
 
-                    b.HasKey("Id");
+                    b.HasKey("UserId");
 
                     b.ToTable("Users");
                 });
 
             modelBuilder.Entity("PRAPI.Models.Order", b =>
                 {
-                    b.HasOne("PRAPI.Models.Car", "OrderedCar")
+                    b.HasOne("PRAPI.Models.Car", "CarOrdered")
                         .WithMany()
                         .HasForeignKey("CarId")
                         .OnDelete(DeleteBehavior.Cascade);

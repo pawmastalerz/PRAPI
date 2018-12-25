@@ -13,5 +13,13 @@ namespace PRAPI.Services
                 return true;
             return false;
         }
+
+        public string GetUserId(string token)
+        {
+            var noBearerToken = token.Remove(0, 7);
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var decodedToken = tokenHandler.ReadJwtToken(noBearerToken);
+            return decodedToken.Payload["unique_name"].ToString();
+        }
     }
 }

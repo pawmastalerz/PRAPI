@@ -98,5 +98,29 @@ namespace PRAPI.Controllers
                 return BadRequest(new { message = ex.Message });
             }
         }
+
+        [Authorize]
+        [HttpGet("current")]
+        public async Task<IActionResult> GetCurrentlyOrdered()
+        {
+            try
+            {
+                var bearerToken = Request.Headers["Authorization"].ToString();
+
+                var currentCars = await this.repo.GetCurrentOrdersForUser(
+                    Int32.Parse(this.tokenService.GetUserId(bearerToken)));
+
+                if (currentCars != null)
+                    return Ok(currentCars);
+                else return BadRequest("Problem fetching currently ordered cars list");
+            }
+            catch (AppException ex)
+            {
+                return BadRequest(new
+                {
+                    message = ex.Message
+                });
+            }
+        }
     }
 }

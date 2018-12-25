@@ -47,7 +47,7 @@ namespace PRAPI.Data
             var sql = from c in this.context.Cars
                       where (c.Model == searchParams.Model) && (
                           !this.context.Orders.Any(o => (
-                              (o.CarId == c.Id) && (
+                              (o.CarId == c.CarId) && (
                                 ((o.ReservedFrom < searchParams.ReservedFrom) &&
                                 (o.ReservedTo >= searchParams.ReservedFrom)) ||
                                 ((o.ReservedFrom <= searchParams.ReservedTo) &&
@@ -66,7 +66,7 @@ namespace PRAPI.Data
         public async Task<Car> GetCar(int id)
         {
             var carToReturn = await this.context.Cars
-                .FirstOrDefaultAsync(p => p.Id == id);
+                .FirstOrDefaultAsync(p => p.CarId == id);
             return carToReturn;
         }
 

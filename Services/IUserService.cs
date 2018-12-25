@@ -9,8 +9,8 @@ namespace PRAPI.Services
         User Login(string username, string password);
         User Create(User user, string password);
         IEnumerable<User> GetAll();
-        User GetById(int id);
+        User GetById(int userId);
         void Update(User user, string currentPassword = null, string password = null);
-        void Delete(int id);
+        void Delete(int userId);
     }
 }
