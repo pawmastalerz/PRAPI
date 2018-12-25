@@ -38,7 +38,7 @@ namespace PRAPI.Data
         {
             return await this.context.Cars
                 .GroupBy(c => c.Model)
-                .Select(g => g.First())
+                .Select(g => g.FirstOrDefault())
                 .ToListAsync();
         }
 

@@ -107,11 +107,14 @@ namespace PRAPI.Controllers
             {
                 var bearerToken = Request.Headers["Authorization"].ToString();
 
-                var currentCars = await this.repo.GetCurrentOrdersForUser(
+                var currentOrders = await this.repo.GetCurrentOrdersForUser(
                     Int32.Parse(this.tokenService.GetUserId(bearerToken)));
 
-                if (currentCars != null)
-                    return Ok(currentCars);
+                if (currentOrders != null)
+                {
+                    var ordersToReturn = this.mapper.Map<List<Order>, List<OrderDetailDto>>(currentOrders);
+                    return Ok(ordersToReturn);
+                }
                 else return BadRequest("Problem fetching currently ordered cars list");
             }
             catch (AppException ex)
