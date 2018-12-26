@@ -27,19 +27,22 @@ namespace PRAPI.Controllers
         private readonly IOrderRepository repo;
         private readonly IMapper mapper;
         private readonly IHostingEnvironment hostingEnvironment;
+        private readonly DataContext context;
 
         public OrdersController(
             ITokenService tokenService,
             ICarRepository carRepo,
             IOrderRepository repo,
             IMapper mapper,
-            IHostingEnvironment hostingEnvironment)
+            IHostingEnvironment hostingEnvironment,
+            DataContext context)
         {
             this.mapper = mapper;
             this.tokenService = tokenService;
             this.carRepo = carRepo;
             this.repo = repo;
             this.hostingEnvironment = hostingEnvironment;
+            this.context = context;
         }
 
         [AllowAnonymous]
@@ -113,6 +116,31 @@ namespace PRAPI.Controllers
                     var ordersToReturn = this.mapper.Map<List<Order>, List<OrderDetailDto>>(currentOrders);
                     return Ok(ordersToReturn);
                 }
+                else return BadRequest("Problem fetching currently ordered cars list");
+            }
+            catch (AppException ex)
+            {
+                return BadRequest(new
+                {
+                    message = ex.Message
+                });
+            }
+        }
+
+        [Authorize]
+        [HttpPost("return/{orderId}")]
+        public IActionResult ReturnCar(int orderId)
+        {
+            try
+            {
+                var bearerToken = Request.Headers["Authorization"].ToString();
+                var orderToMark = this.context.Orders.FirstOrDefault(o => o.OrderId == orderId);
+
+                if (!this.tokenService.CheckIfSameUser(bearerToken, orderToMark.UserId))
+                    return Unauthorized();
+
+                if (this.repo.MarkAsReturned(orderId) != false)
+                    return Ok();
                 else return BadRequest("Problem fetching currently ordered cars list");
             }
             catch (AppException ex)

@@ -45,7 +45,8 @@ namespace PRAPI.Data
             var sql = from o in this.context.Orders
                       where (this.context.Orders.Any(q => (
                             (q.CarId == order.CarId) &&
-                            (q.UserId == order.UserId) && (
+                            (q.UserId == order.UserId) &&
+                            (q.IsReturned == "nie") && (
                             ((q.ReservedFrom < order.ReservedFrom) &&
                             (q.ReservedTo >= order.ReservedFrom)) ||
                             ((q.ReservedFrom <= order.ReservedTo) &&
@@ -61,7 +62,7 @@ namespace PRAPI.Data
 
             if (result.Count == 0)
             {
-                order.IsReturned = "no";
+                order.IsReturned = "nie";
                 var dayDifference = (order.ReservedTo - order.ReservedFrom).TotalDays;
                 var orderedCar = this.context.Cars.Find(order.CarId);
                 order.TotalPrice = this.CalculatePrice(dayDifference, orderedCar.Price);
@@ -84,8 +85,16 @@ namespace PRAPI.Data
             .Include(o => o.CarOrdered)
             .OrderBy(o => o.ReservedFrom)
             .ToListAsync();
-            
+
             return orders;
+        }
+
+        public bool MarkAsReturned(int orderId)
+        {
+            var orderToMark = this.context.Orders.FirstOrDefault(o => o.OrderId == orderId);
+            orderToMark.IsReturned = "tak";
+            this.context.SaveChanges();
+            return true;
         }
     }
 }

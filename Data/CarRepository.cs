@@ -47,7 +47,8 @@ namespace PRAPI.Data
             var sql = from c in this.context.Cars
                       where (c.Model == searchParams.Model) && (
                           !this.context.Orders.Any(o => (
-                              (o.CarId == c.CarId) && (
+                              (o.CarId == c.CarId) &&
+                              (o.IsReturned == "nie" ) && (
                                 ((o.ReservedFrom < searchParams.ReservedFrom) &&
                                 (o.ReservedTo >= searchParams.ReservedFrom)) ||
                                 ((o.ReservedFrom <= searchParams.ReservedTo) &&
