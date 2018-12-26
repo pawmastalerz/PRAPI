@@ -62,6 +62,9 @@ namespace PRAPI.Data
             if (result.Count == 0)
             {
                 order.IsReturned = "no";
+                var dayDifference = (order.ReservedTo - order.ReservedFrom).TotalDays;
+                var orderedCar = this.context.Cars.Find(order.CarId);
+                order.TotalPrice = this.CalculatePrice(dayDifference, orderedCar.Price);
                 this.context.Orders.Add(order);
                 this.context.SaveChanges();
                 return true;
@@ -77,8 +80,9 @@ namespace PRAPI.Data
         public async Task<List<Order>> GetCurrentOrdersForUser(int userId)
         {
             var orders = await this.context.Orders
-            .Where(o => o.IsReturned == "no")
+            .Where(o => o.IsReturned == "nie")
             .Include(o => o.CarOrdered)
+            .OrderBy(o => o.ReservedFrom)
             .ToListAsync();
             
             return orders;

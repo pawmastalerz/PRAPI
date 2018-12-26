@@ -39,18 +39,6 @@
           "lib/netstandard2.0/AutoMapper.Extensions.Microsoft.DependencyInjection.dll": {}
         }
       },
-      "CloudinaryDotNet/1.4.1": {
-        "type": "package",
-        "dependencies": {
-          "Newtonsoft.Json": "11.0.1"
-        },
-        "compile": {
-          "lib/netstandard1.3/CloudinaryDotNet.dll": {}
-        },
-        "runtime": {
-          "lib/netstandard1.3/CloudinaryDotNet.dll": {}
-        }
-      },
       "Microsoft.AspNet.WebApi.Client/5.2.6": {
         "type": "package",
         "dependencies": {
@@ -4461,23 +4449,6 @@
         "automapper.extensions.microsoft.dependencyinjection.nuspec",
         "lib/netstandard2.0/AutoMapper.Extensions.Microsoft.DependencyInjection.dll",
         "lib/netstandard2.0/AutoMapper.Extensions.Microsoft.DependencyInjection.pdb"
-      ]
-    },
-    "CloudinaryDotNet/1.4.1": {
-      "sha512": "0W6kgTGxxJHDPVtMR5WrpHAydkpg7gW9tWrcs0hsZlmLHGrCpb4Emu4wcOXFmotvCiZR+4a3YvI/4fb/aAkjXg==",
-      "type": "package",
-      "path": "cloudinarydotnet/1.4.1",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "cloudinarydotnet.1.4.1.nupkg.sha512",
-        "cloudinarydotnet.nuspec",
-        "lib/net40/CloudinaryDotNet.dll",
-        "lib/net40/Newtonsoft.Json.dll",
-        "lib/netcore/CloudinaryDotNet.deps.json",
-        "lib/netcore/CloudinaryDotNet.dll",
-        "lib/netstandard1.3/CloudinaryDotNet.deps.json",
-        "lib/netstandard1.3/CloudinaryDotNet.dll"
       ]
     },
     "Microsoft.AspNet.WebApi.Client/5.2.6": {
@@ -11887,7 +11858,6 @@
       "AutoMapper >= 7.0.1",
       "AutoMapper.Collection >= 4.0.0",
       "AutoMapper.Extensions.Microsoft.DependencyInjection >= 5.0.1",
-      "CloudinaryDotNet >= 1.4.1",
       "Microsoft.AspNetCore.App >= 2.1.1",
       "Microsoft.EntityFrameworkCore >= 2.1.4",
       "Microsoft.EntityFrameworkCore.Relational >= 2.1.4",
@@ -11948,10 +11918,6 @@
           "AutoMapper.Extensions.Microsoft.DependencyInjection": {
             "target": "Package",
             "version": "[5.0.1, )"
-          },
-          "CloudinaryDotNet": {
-            "target": "Package",
-            "version": "[1.4.1, )"
           },
           "Microsoft.AspNetCore.App": {
             "suppressParent": "All",
