@@ -107,12 +107,12 @@ namespace PRAPI.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet("user/{id}")]
-        public async Task<IActionResult> GetCarForUser(int id)
+        [HttpGet("user/{carId}")]
+        public async Task<IActionResult> GetCarForUser(int carId)
         {
             try
             {
-                var carFromRepo = await this.repo.GetCar(id);
+                var carFromRepo = await this.repo.GetCar(carId);
                 if (carFromRepo != null)
                 {
                     var carToReturn = this.mapper.Map<Car, CarDetailsForUserDto>(carFromRepo);
