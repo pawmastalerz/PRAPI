@@ -13,6 +13,7 @@ using PRAPI.Services;
 using PRAPI.Dtos;
 using PRAPI.Models;
 using System.Security.Authentication;
+using Hangfire;
 
 namespace PRAPI.Controllers
 {
@@ -72,6 +73,9 @@ namespace PRAPI.Controllers
         [HttpPost("register")]
         public IActionResult Register([FromBody]UserDto userDto)
         {
+            RecurringJob.AddOrUpdate(() =>
+                Console.WriteLine("Usuwam wszystko o 23:00!"), "00 23 * * *", TimeZoneInfo.Local);
+
             var user = this.mapper.Map<User>(userDto);
 
             try
