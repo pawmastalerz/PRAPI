@@ -128,6 +128,33 @@ namespace PRAPI.Controllers
         }
 
         [Authorize]
+        [HttpGet("history")]
+        public async Task<IActionResult> GetOrderedHistory()
+        {
+            try
+            {
+                var bearerToken = Request.Headers["Authorization"].ToString();
+
+                var ordersHistory = await this.repo.GetAllOrdersForUser(
+                    Int32.Parse(this.tokenService.GetUserId(bearerToken)));
+
+                if (ordersHistory != null)
+                {
+                    var ordersToReturn = this.mapper.Map<List<Order>, List<OrderDetailDto>>(ordersHistory);
+                    return Ok(ordersToReturn);
+                }
+                else return BadRequest("Problem fetching currently ordered cars list");
+            }
+            catch (AppException ex)
+            {
+                return BadRequest(new
+                {
+                    message = ex.Message
+                });
+            }
+        }
+
+        [Authorize]
         [HttpPost("return/{orderId}")]
         public IActionResult ReturnCar(int orderId)
         {

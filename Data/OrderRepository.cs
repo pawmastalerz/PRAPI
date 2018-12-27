@@ -73,15 +73,21 @@ namespace PRAPI.Data
             return false;
         }
 
-        public Task<List<Order>> GetAllOrdersForUser(int id)
+        public async Task<List<Order>> GetAllOrdersForUser(int userId)
         {
-            throw new NotImplementedException();
+            var orders = await this.context.Orders
+            .Where(o => o.UserId == userId)
+            .Include(o => o.CarOrdered)
+            .OrderBy(o => o.OrderId)
+            .ToListAsync();
+
+            return orders;
         }
 
         public async Task<List<Order>> GetCurrentOrdersForUser(int userId)
         {
             var orders = await this.context.Orders
-            .Where(o => o.IsReturned == "nie")
+            .Where(o => o.IsReturned == "nie" && o.UserId == userId)
             .Include(o => o.CarOrdered)
             .OrderBy(o => o.ReservedFrom)
             .ToListAsync();
