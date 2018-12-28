@@ -102,5 +102,12 @@ namespace PRAPI.Data
             this.context.SaveChanges();
             return true;
         }
+
+        public Order GetOrderById(int orderId)
+        {
+            var orderToReturn = this.context.Orders
+                .FirstOrDefault(o => o.OrderId == orderId);
+            return orderToReturn;
+        }
     }
 }

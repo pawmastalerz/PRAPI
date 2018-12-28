@@ -27,22 +27,19 @@ namespace PRAPI.Controllers
         private readonly IOrderRepository repo;
         private readonly IMapper mapper;
         private readonly IHostingEnvironment hostingEnvironment;
-        private readonly DataContext context;
 
         public OrdersController(
             ITokenService tokenService,
             ICarRepository carRepo,
             IOrderRepository repo,
             IMapper mapper,
-            IHostingEnvironment hostingEnvironment,
-            DataContext context)
+            IHostingEnvironment hostingEnvironment)
         {
             this.mapper = mapper;
             this.tokenService = tokenService;
             this.carRepo = carRepo;
             this.repo = repo;
-            this.hostingEnvironment = hostingEnvironment;
-            this.context = context;
+            this.hostingEnvironment = hostingEnvironment;;
         }
 
         [AllowAnonymous]
@@ -161,7 +158,7 @@ namespace PRAPI.Controllers
             try
             {
                 var bearerToken = Request.Headers["Authorization"].ToString();
-                var orderToMark = this.context.Orders.FirstOrDefault(o => o.OrderId == orderId);
+                var orderToMark = this.repo.GetOrderById(orderId);
 
                 if (!this.tokenService.CheckIfSameUser(bearerToken, orderToMark.UserId))
                     return Unauthorized();
