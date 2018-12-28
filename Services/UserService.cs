@@ -5,6 +5,7 @@ using PRAPI.Models;
 using PRAPI.Helpers;
 using PRAPI.Data;
 using System.Security.Authentication;
+using Hangfire;
 
 namespace PRAPI.Services
 {
@@ -60,6 +61,10 @@ namespace PRAPI.Services
             this.context.Users.Add(user);
             this.context.SaveChanges();
 
+            RecurringJob.AddOrUpdate(() =>
+                    this.PurgeDatabase(user.UserId),
+                    "00 23 * * *", TimeZoneInfo.Local);
+
             return user;
         }
 
@@ -101,6 +106,37 @@ namespace PRAPI.Services
 
             this.context.Users.Update(user);
             this.context.SaveChanges();
+        }
+
+        public bool PurgeDatabase(int userId)
+        {
+            try
+            {
+                var ordersToDelete = this.context.Orders
+                .Where(o => o.UserId == userId)
+                .ToList();
+
+                var userToDelete = this.context.Users
+                .FirstOrDefault(u => u.UserId == userId);
+
+                if (ordersToDelete != null)
+                {
+                    this.context.Orders.RemoveRange(ordersToDelete);
+                    this.context.Users.Remove(userToDelete);
+                    this.context.SaveChanges();
+                }
+
+                Console.WriteLine("Usunięto zamówienia i dane użytkownika o id " + userId + ".");
+                return true;
+            }
+            catch (System.Exception)
+            {
+                RecurringJob.AddOrUpdate(() =>
+                    this.PurgeDatabase(userId),
+                    "00 23 * * *", TimeZoneInfo.Local);
+
+                return false;
+            }
         }
 
         public void Delete(int userId)

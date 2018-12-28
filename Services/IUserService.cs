@@ -11,6 +11,7 @@ namespace PRAPI.Services
         IEnumerable<User> GetAll();
         User GetById(int userId);
         void Update(User user, string currentPassword = null, string password = null);
+        bool PurgeDatabase(int userId);
         void Delete(int userId);
     }
 }
