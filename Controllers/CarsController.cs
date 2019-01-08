@@ -86,6 +86,9 @@ namespace PRAPI.Controllers
         {
             try
             {
+                int modelIndex = searchParams.Model.IndexOf(" ") + 1;
+                searchParams.Model = searchParams.Model.Substring(modelIndex);
+                
                 if (searchParams.ReservedFrom > searchParams.ReservedTo)
                     return BadRequest("Reservation's start is bigger than reservation's end");
                 if (searchParams.ReservedFrom < DateTime.Now.AddDays(-1) || searchParams.ReservedTo < DateTime.Now.AddDays(-1))
