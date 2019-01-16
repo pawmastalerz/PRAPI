@@ -89,7 +89,7 @@ namespace PRAPI.Data
             var orders = await this.context.Orders
             .Where(o => o.IsReturned == "nie" && o.UserId == userId)
             .Include(o => o.CarOrdered)
-            .OrderBy(o => o.ReservedFrom)
+            .OrderByDescending(o => o.OrderId)
             .ToListAsync();
 
             return orders;
