@@ -39,7 +39,7 @@ namespace PRAPI.Controllers
             this.tokenService = tokenService;
             this.carRepo = carRepo;
             this.repo = repo;
-            this.hostingEnvironment = hostingEnvironment;;
+            this.hostingEnvironment = hostingEnvironment; ;
         }
 
         [AllowAnonymous]
@@ -166,6 +166,34 @@ namespace PRAPI.Controllers
                 if (this.repo.MarkAsReturned(orderId) != false)
                     return Ok();
                 else return BadRequest("Problem fetching currently ordered cars list");
+            }
+            catch (AppException ex)
+            {
+                return BadRequest(new
+                {
+                    message = ex.Message
+                });
+            }
+        }
+
+        [Authorize]
+        [HttpGet("admin/all")]
+        public async Task<IActionResult> AdminGetAllOrders()
+        {
+            try
+            {
+                var bearerToken = Request.Headers["Authorization"].ToString();
+                if (!this.tokenService.CheckIfAdmin(bearerToken))
+                    return Unauthorized();
+
+                var allOrders = await this.repo.AdminGetAllOrders();
+
+                if (allOrders != null)
+                {
+                    var ordersToReturn = this.mapper.Map<List<Order>, List<OrderDetailDto>>(allOrders);
+                    return Ok(ordersToReturn);
+                }
+                else return BadRequest("Problem fetching all orders for admin");
             }
             catch (AppException ex)
             {
