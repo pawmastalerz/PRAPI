@@ -12,6 +12,7 @@ namespace PRAPI.Data
         bool CreateOrder(Order order);
         Task<List<Order>> GetAllOrdersForUser(int id);
         Task<List<Order>> AdminGetAllOrders();
+        Task<List<Order>> AdminGetAllCurrentOrders();
         Task<List<Order>> GetCurrentOrdersForUser(int id);
         Order GetOrderById(int orderId);
         bool MarkAsReturned(int orderId);

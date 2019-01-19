@@ -119,5 +119,16 @@ namespace PRAPI.Data
 
             return orders;
         }
+
+        public async Task<List<Order>> AdminGetAllCurrentOrders()
+        {
+            var orders = await this.context.Orders
+            .Where(o => o.IsReturned == "nie")
+            .Include(o => o.CarOrdered)
+            .OrderByDescending(o => o.OrderId)
+            .ToListAsync();
+
+            return orders;
+        }
     }
 }

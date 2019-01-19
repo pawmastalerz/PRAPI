@@ -203,5 +203,33 @@ namespace PRAPI.Controllers
                 });
             }
         }
+
+        [Authorize]
+        [HttpGet("admin/current")]
+        public async Task<IActionResult> AdminGetAllCurrentOrders()
+        {
+            try
+            {
+                var bearerToken = Request.Headers["Authorization"].ToString();
+                if (!this.tokenService.CheckIfAdmin(bearerToken))
+                    return Unauthorized();
+
+                var allOrders = await this.repo.AdminGetAllCurrentOrders();
+
+                if (allOrders != null)
+                {
+                    var ordersToReturn = this.mapper.Map<List<Order>, List<OrderDetailDto>>(allOrders);
+                    return Ok(ordersToReturn);
+                }
+                else return BadRequest("Problem fetching all current orders for admin");
+            }
+            catch (AppException ex)
+            {
+                return BadRequest(new
+                {
+                    message = ex.Message
+                });
+            }
+        }
     }
 }
