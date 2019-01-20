@@ -108,6 +108,8 @@ namespace PRAPI.Services
         {
             try
             {
+                if (userId == 1) return false;                
+
                 var ordersToDelete = this.context.Orders
                 .Where(o => o.UserId == userId)
                 .ToList();

@@ -130,7 +130,7 @@ namespace PRAPI.Controllers
         public IActionResult Delete(int id)
         {
             var bearerToken = Request.Headers["Authorization"].ToString();
-            if (!this.tokenService.CheckIfSameUser(bearerToken, id))
+            if (!this.tokenService.CheckIfSameUser(bearerToken, id) || id == 1)
                 return Unauthorized();
 
             this.userService.Delete(id);
