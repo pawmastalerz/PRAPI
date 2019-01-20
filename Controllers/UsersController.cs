@@ -13,6 +13,7 @@ using PRAPI.Services;
 using PRAPI.Dtos;
 using PRAPI.Models;
 using System.Security.Authentication;
+using System.Threading.Tasks;
 
 namespace PRAPI.Controllers
 {
@@ -134,6 +135,34 @@ namespace PRAPI.Controllers
 
             this.userService.Delete(id);
             return Ok();
+        }
+
+        [Authorize]
+        [HttpGet("admin/all")]
+        public ActionResult AdminGetAllUsers()
+        {
+            try
+            {
+                var bearerToken = Request.Headers["Authorization"].ToString();
+                if (!this.tokenService.CheckIfAdmin(bearerToken))
+                    return Unauthorized();
+
+                var allUsers = this.userService.AdminGetAllUsers();
+
+                if (allUsers != null)
+                {
+                    var usersToReturn = this.mapper.Map<List<User>, List<UserDataDto>>(allUsers);
+                    return Ok(usersToReturn);
+                }
+                else return BadRequest("Problem fetching all users for admin");
+            }
+            catch (AppException ex)
+            {
+                return BadRequest(new
+                {
+                    message = ex.Message
+                });
+            }
         }
     }
 }

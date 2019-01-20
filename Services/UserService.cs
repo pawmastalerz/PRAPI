@@ -6,6 +6,7 @@ using PRAPI.Helpers;
 using PRAPI.Data;
 using System.Security.Authentication;
 using Hangfire;
+using System.Threading.Tasks;
 
 namespace PRAPI.Services
 {
@@ -32,11 +33,6 @@ namespace PRAPI.Services
                 return null;
 
             return user;
-        }
-
-        public IEnumerable<User> GetAll()
-        {
-            return this.context.Users;
         }
 
         public User GetById(int userId)
@@ -181,6 +177,15 @@ namespace PRAPI.Services
             }
 
             return true;
+        }
+
+        public List<User> AdminGetAllUsers()
+        {
+            var users = this.context.Users
+            .OrderByDescending(o => o.UserId)
+            .ToList();
+
+            return users;
         }
     }
 }
