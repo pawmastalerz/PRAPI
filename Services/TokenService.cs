@@ -15,13 +15,18 @@ namespace PRAPI.Services
             return false;
         }
 
-        public bool CheckIfSameUser(string token, int id)
+        public bool CheckIfAdminOrSameUser(string token, int id)
         {
             var noBearerToken = token.Remove(0, 7);
             var tokenHandler = new JwtSecurityTokenHandler();
             var decodedToken = tokenHandler.ReadJwtToken(noBearerToken);
-            if (decodedToken.Payload["unique_name"].ToString() == id.ToString())
+            if
+            (
+                decodedToken.Payload["unique_name"].ToString() == "1" ||
+                decodedToken.Payload["unique_name"].ToString() == id.ToString()
+            )
                 return true;
+                
             return false;
         }
 

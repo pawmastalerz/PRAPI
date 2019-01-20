@@ -81,7 +81,7 @@ namespace PRAPI.Controllers
                     return BadRequest("Reservation's date is bigger than 6 months");
 
                 var bearerToken = Request.Headers["Authorization"].ToString();
-                if (!this.tokenService.CheckIfSameUser(bearerToken, orderParams.UserId))
+                if (!this.tokenService.CheckIfAdminOrSameUser(bearerToken, orderParams.UserId))
                     return Unauthorized();
 
                 var newOrder = this.mapper.Map<Order>(orderParams);
@@ -160,7 +160,7 @@ namespace PRAPI.Controllers
                 var bearerToken = Request.Headers["Authorization"].ToString();
                 var orderToMark = this.repo.GetOrderById(orderId);
 
-                if (!this.tokenService.CheckIfSameUser(bearerToken, orderToMark.UserId))
+                if (!this.tokenService.CheckIfAdminOrSameUser(bearerToken, orderToMark.UserId))
                     return Unauthorized();
 
                 if (this.repo.MarkAsReturned(orderId) != false)

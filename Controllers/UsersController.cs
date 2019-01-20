@@ -91,7 +91,7 @@ namespace PRAPI.Controllers
         public IActionResult GetById(int id)
         {
             var bearerToken = Request.Headers["Authorization"].ToString();
-            if (!this.tokenService.CheckIfSameUser(bearerToken, id))
+            if (!this.tokenService.CheckIfAdminOrSameUser(bearerToken, id))
                 return Unauthorized();
 
             var user = this.userService.GetById(id);
@@ -104,7 +104,7 @@ namespace PRAPI.Controllers
         public IActionResult Update(int id, [FromBody]UserDto userDto)
         {
             var bearerToken = Request.Headers["Authorization"].ToString();
-            if (!this.tokenService.CheckIfSameUser(bearerToken, id))
+            if (!this.tokenService.CheckIfAdminOrSameUser(bearerToken, id))
                 return Unauthorized();
 
             var user = this.mapper.Map<User>(userDto);
@@ -130,7 +130,7 @@ namespace PRAPI.Controllers
         public IActionResult Delete(int id)
         {
             var bearerToken = Request.Headers["Authorization"].ToString();
-            if (!this.tokenService.CheckIfSameUser(bearerToken, id) || id == 1)
+            if (!this.tokenService.CheckIfAdminOrSameUser(bearerToken, id) || id == 1)
                 return Unauthorized();
 
             this.userService.Delete(id);
