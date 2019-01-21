@@ -40,7 +40,7 @@ namespace PRAPI.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet("user/all")]
+        [HttpGet("all")]
         public async Task<IActionResult> GetAllCarsForUser()
         {
             try
@@ -81,7 +81,7 @@ namespace PRAPI.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost("user/search")]
+        [HttpPost("search")]
         public async Task<IActionResult> SearchForCarsForUser([FromBody] SearchParams searchParams)
         {
             try
@@ -110,7 +110,7 @@ namespace PRAPI.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet("user/{carId}")]
+        [HttpGet("{carId}")]
         public async Task<IActionResult> GetCarForUser(int carId)
         {
             try
