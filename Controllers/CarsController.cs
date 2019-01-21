@@ -41,7 +41,7 @@ namespace PRAPI.Controllers
 
         [AllowAnonymous]
         [HttpGet("all")]
-        public async Task<IActionResult> GetAllCarsForUser()
+        public async Task<IActionResult> GetAllCars()
         {
             try
             {
@@ -49,7 +49,7 @@ namespace PRAPI.Controllers
 
                 if (carsFromRepo != null)
                 {
-                    var carsToReturn = this.mapper.Map<List<Car>, List<CarDetailsForUserDto>>(carsFromRepo);
+                    var carsToReturn = this.mapper.Map<List<Car>, List<CarDetailsDto>>(carsFromRepo);
                     return Ok(carsToReturn);
                 }
 
@@ -82,7 +82,7 @@ namespace PRAPI.Controllers
 
         [AllowAnonymous]
         [HttpPost("search")]
-        public async Task<IActionResult> SearchForCarsForUser([FromBody] SearchParams searchParams)
+        public async Task<IActionResult> SearchForCars([FromBody] SearchParams searchParams)
         {
             try
             {
@@ -96,7 +96,7 @@ namespace PRAPI.Controllers
                 if (searchParams.ReservedFrom > DateTime.Now.AddMonths(6) || searchParams.ReservedTo > DateTime.Now.AddMonths(6))
                     return BadRequest("Reservation's date is bigger than 6 months");
 
-                var carsFromRepo = await this.repo.SearchForCarsForUser(searchParams);
+                var carsFromRepo = await this.repo.SearchForCars(searchParams);
 
                 if (carsFromRepo != null)
                     return Ok(carsFromRepo);
@@ -111,14 +111,14 @@ namespace PRAPI.Controllers
 
         [AllowAnonymous]
         [HttpGet("{carId}")]
-        public async Task<IActionResult> GetCarForUser(int carId)
+        public async Task<IActionResult> GetCar(int carId)
         {
             try
             {
                 var carFromRepo = await this.repo.GetCar(carId);
                 if (carFromRepo != null)
                 {
-                    var carToReturn = this.mapper.Map<Car, CarDetailsForUserDto>(carFromRepo);
+                    var carToReturn = this.mapper.Map<Car, CarDetailsDto>(carFromRepo);
                     return Ok(carToReturn);
                 }
 

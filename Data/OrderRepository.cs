@@ -73,7 +73,7 @@ namespace PRAPI.Data
             return false;
         }
 
-        public async Task<List<Order>> GetAllOrdersForUser(int userId)
+        public async Task<List<Order>> GetAllOrders(int userId)
         {
             var orders = await this.context.Orders
             .Where(o => o.UserId == userId)
@@ -84,7 +84,7 @@ namespace PRAPI.Data
             return orders;
         }
 
-        public async Task<List<Order>> GetCurrentOrdersForUser(int userId)
+        public async Task<List<Order>> GetCurrentOrders(int userId)
         {
             var orders = await this.context.Orders
             .Where(o => o.IsReturned == "nie" && o.UserId == userId)

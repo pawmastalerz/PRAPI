@@ -42,7 +42,7 @@ namespace PRAPI.Data
                 .ToListAsync();
         }
 
-        public async Task<List<Car>> SearchForCarsForUser(SearchParams searchParams)
+        public async Task<List<Car>> SearchForCars(SearchParams searchParams)
         {
             var sql = from c in this.context.Cars
                       where (c.Model == searchParams.Model) && (

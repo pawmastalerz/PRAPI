@@ -105,7 +105,7 @@ namespace PRAPI.Controllers
             {
                 var bearerToken = Request.Headers["Authorization"].ToString();
 
-                var currentOrders = await this.repo.GetCurrentOrdersForUser(
+                var currentOrders = await this.repo.GetCurrentOrders(
                     Int32.Parse(this.tokenService.GetUserId(bearerToken)));
 
                 if (currentOrders != null)
@@ -132,7 +132,7 @@ namespace PRAPI.Controllers
             {
                 var bearerToken = Request.Headers["Authorization"].ToString();
 
-                var ordersHistory = await this.repo.GetAllOrdersForUser(
+                var ordersHistory = await this.repo.GetAllOrders(
                     Int32.Parse(this.tokenService.GetUserId(bearerToken)));
 
                 if (ordersHistory != null)

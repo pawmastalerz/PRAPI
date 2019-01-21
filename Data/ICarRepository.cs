@@ -12,7 +12,7 @@ namespace PRAPI.Data
         Task<Car> GetCar(int id);
         Task<List<Car>> GetAllCars();
         Task<List<Car>> GetAllCarModels();
-        Task<List<Car>> SearchForCarsForUser(SearchParams searchParams);
+        Task<List<Car>> SearchForCars(SearchParams searchParams);
         void Delete<T>(T entity) where T : class;
         Task<bool> SaveAll();
     }

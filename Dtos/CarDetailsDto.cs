@@ -2,7 +2,7 @@ using System;
 
 namespace PRAPI.Dtos
 {
-    public class CarDetailsForUserDto
+    public class CarDetailsDto
     {
         public int CarId { get; set; }
         public string Brand { get; set; }
