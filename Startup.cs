@@ -85,10 +85,13 @@ namespace PRAPI
             services.AddScoped<ICarRepository, CarRepository>();
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<ICloudinaryService, CloudinaryService>();
 
             // Hangfire
             services.AddHangfire(config =>
                 config.UseStorage(new MySqlStorage(Configuration.GetConnectionString("HangfireConnection"), new MySqlStorageOptions { })));
+
+            services.Configure<CloudinarySettings>(Configuration.GetSection("CloudinarySettings"));
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)

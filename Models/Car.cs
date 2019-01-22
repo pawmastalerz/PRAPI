@@ -17,5 +17,6 @@ namespace PRAPI.Models
         public string AirConditioned { get; set; }
         public int Price { get; set; }
         public string PhotoUrl { get; set; }
+        public string PublicId { get; set; }
     }
 }

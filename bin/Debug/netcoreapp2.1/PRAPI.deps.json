@@ -1,7 +1,7 @@
 {
   "runtimeTarget": {
     "name": ".NETCoreApp,Version=v2.1",
-    "signature": "728297d7fe39c85638375549ab865b5e95787fda"
+    "signature": "e182aea5069b1833ef5d0faf96c0ab5456c80ce7"
   },
   "compilationOptions": {
     "defines": [
@@ -27,6 +27,7 @@
           "AutoMapper": "7.0.1",
           "AutoMapper.Collection": "4.0.0",
           "AutoMapper.Extensions.Microsoft.DependencyInjection": "5.0.1",
+          "CloudinaryDotNet": "1.6.0",
           "Hangfire.AspNetCore": "1.6.21",
           "Hangfire.MySqlStorage": "2.0.0",
           "Microsoft.AspNetCore.App": "2.1.1",
@@ -84,6 +85,20 @@
         },
         "compile": {
           "lib/netstandard2.0/AutoMapper.Extensions.Microsoft.DependencyInjection.dll": {}
+        }
+      },
+      "CloudinaryDotNet/1.6.0": {
+        "dependencies": {
+          "Newtonsoft.Json": "11.0.2"
+        },
+        "runtime": {
+          "lib/netstandard1.3/CloudinaryDotNet.dll": {
+            "assemblyVersion": "1.6.0.0",
+            "fileVersion": "1.6.0.0"
+          }
+        },
+        "compile": {
+          "lib/netstandard1.3/CloudinaryDotNet.dll": {}
         }
       },
       "Dapper/1.50.5": {
@@ -3399,6 +3414,13 @@
       "sha512": "sha512-7MIq6D/ax3964iHXbL1L2ldUvl6IlKp0p1GZFzr6vlIhEVyp4CgJwOpisRLvIO7dP+kDtbY3Hb9yuPNCkfyBFg==",
       "path": "automapper.extensions.microsoft.dependencyinjection/5.0.1",
       "hashPath": "automapper.extensions.microsoft.dependencyinjection.5.0.1.nupkg.sha512"
+    },
+    "CloudinaryDotNet/1.6.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-HKROJitzDyQ6X8sGP4KoThLU0UKHaPcR3Rr9ahMyF4WgwtIMC/UAivn7328tJGR7MgXZ+DOXVj+ecm2thHC1xw==",
+      "path": "cloudinarydotnet/1.6.0",
+      "hashPath": "cloudinarydotnet.1.6.0.nupkg.sha512"
     },
     "Dapper/1.50.5": {
       "type": "package",

@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PRAPI.Data;
 
 namespace PRAPI.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20190122120336_CloudinaryIdMigration")]
+    partial class CloudinaryIdMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -28,6 +30,8 @@ namespace PRAPI.Migrations
 
                     b.Property<string>("Brand");
 
+                    b.Property<string>("CloudinaryId");
+
                     b.Property<string>("Description");
 
                     b.Property<int>("Doors");
@@ -41,8 +45,6 @@ namespace PRAPI.Migrations
                     b.Property<string>("PhotoUrl");
 
                     b.Property<int>("Price");
-
-                    b.Property<string>("PublicId");
 
                     b.Property<string>("Transmission");
 

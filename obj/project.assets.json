@@ -39,6 +39,18 @@
           "lib/netstandard2.0/AutoMapper.Extensions.Microsoft.DependencyInjection.dll": {}
         }
       },
+      "CloudinaryDotNet/1.6.0": {
+        "type": "package",
+        "dependencies": {
+          "Newtonsoft.Json": "11.0.1"
+        },
+        "compile": {
+          "lib/netstandard1.3/CloudinaryDotNet.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard1.3/CloudinaryDotNet.dll": {}
+        }
+      },
       "Dapper/1.50.5": {
         "type": "package",
         "dependencies": {
@@ -4581,6 +4593,23 @@
         "automapper.extensions.microsoft.dependencyinjection.nuspec",
         "lib/netstandard2.0/AutoMapper.Extensions.Microsoft.DependencyInjection.dll",
         "lib/netstandard2.0/AutoMapper.Extensions.Microsoft.DependencyInjection.pdb"
+      ]
+    },
+    "CloudinaryDotNet/1.6.0": {
+      "sha512": "HKROJitzDyQ6X8sGP4KoThLU0UKHaPcR3Rr9ahMyF4WgwtIMC/UAivn7328tJGR7MgXZ+DOXVj+ecm2thHC1xw==",
+      "type": "package",
+      "path": "cloudinarydotnet/1.6.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "cloudinarydotnet.1.6.0.nupkg.sha512",
+        "cloudinarydotnet.nuspec",
+        "lib/net40/CloudinaryDotNet.dll",
+        "lib/net40/Newtonsoft.Json.dll",
+        "lib/netcore/CloudinaryDotNet.deps.json",
+        "lib/netcore/CloudinaryDotNet.dll",
+        "lib/netstandard1.3/CloudinaryDotNet.deps.json",
+        "lib/netstandard1.3/CloudinaryDotNet.dll"
       ]
     },
     "Dapper/1.50.5": {
@@ -12260,6 +12289,7 @@
       "AutoMapper >= 7.0.1",
       "AutoMapper.Collection >= 4.0.0",
       "AutoMapper.Extensions.Microsoft.DependencyInjection >= 5.0.1",
+      "CloudinaryDotNet >= 1.6.0",
       "Hangfire.AspNetCore >= 1.6.21",
       "Hangfire.MySqlStorage >= 2.0.0",
       "Microsoft.AspNetCore.App >= 2.1.1",
@@ -12277,11 +12307,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Paweł\\Desktop\\prorental\\PRAPI\\PRAPI.csproj",
+      "projectUniqueName": "c:\\Users\\Paweł\\Desktop\\prorental\\PRAPI\\PRAPI.csproj",
       "projectName": "PRAPI",
-      "projectPath": "C:\\Users\\Paweł\\Desktop\\prorental\\PRAPI\\PRAPI.csproj",
+      "projectPath": "c:\\Users\\Paweł\\Desktop\\prorental\\PRAPI\\PRAPI.csproj",
       "packagesPath": "C:\\Users\\Paweł\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Paweł\\Desktop\\prorental\\PRAPI\\obj\\",
+      "outputPath": "c:\\Users\\Paweł\\Desktop\\prorental\\PRAPI\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -12322,6 +12352,10 @@
           "AutoMapper.Extensions.Microsoft.DependencyInjection": {
             "target": "Package",
             "version": "[5.0.1, )"
+          },
+          "CloudinaryDotNet": {
+            "target": "Package",
+            "version": "[1.6.0, )"
           },
           "Hangfire.AspNetCore": {
             "target": "Package",

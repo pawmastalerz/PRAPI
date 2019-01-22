@@ -15,6 +15,7 @@ using PRAPI.Dtos;
 using PRAPI.Helpers;
 using PRAPI.Models;
 using PRAPI.Services;
+using CloudinaryDotNet;
 
 namespace PRAPI.Controllers
 {
@@ -26,17 +27,56 @@ namespace PRAPI.Controllers
         private readonly ICarRepository repo;
         private readonly IMapper mapper;
         private readonly IHostingEnvironment hostingEnvironment;
+        private readonly ICloudinaryService cloudinaryService;
 
         public CarsController(
             ITokenService tokenService,
             ICarRepository repo,
             IMapper mapper,
-            IHostingEnvironment hostingEnvironment)
+            IHostingEnvironment hostingEnvironment,
+            ICloudinaryService cloudinaryService)
         {
             this.mapper = mapper;
             this.tokenService = tokenService;
             this.repo = repo;
             this.hostingEnvironment = hostingEnvironment;
+            this.cloudinaryService = cloudinaryService;
+        }
+
+        [Authorize]
+        [HttpPost("create")]
+        public async Task<IActionResult> CreateCar([FromForm]Car carToCreate)
+        {
+            var bearerToken = Request.Headers["Authorization"].ToString();
+            if (!this.tokenService.CheckIfAdmin(bearerToken))
+                return Unauthorized();
+
+            try
+            {
+                var file = Request.Form.Files[0];
+                if (!this.cloudinaryService.CheckFile(file))
+                    return BadRequest("Uploaded file is not a jpeg or too big ( > 6 MB )");
+
+                var uploadResult = this.cloudinaryService.UploadFile(file);
+                carToCreate.PublicId = uploadResult.PublicId.ToString();
+                carToCreate.PhotoUrl = uploadResult.Uri.ToString();
+            }
+            catch (System.Exception)
+            {
+                return BadRequest("Problem with uploading car photo to cloudinary");
+            }
+
+            try
+            {
+                var carForCreate = this.mapper.Map<Car>(carToCreate);
+                this.repo.CreateCar(carForCreate);
+                await this.repo.SaveAll();
+                return Ok("Car created successfully");
+            }
+            catch (System.Exception)
+            {
+                return BadRequest("Problem with saving car in database");
+            }
         }
 
         [AllowAnonymous]
@@ -88,7 +128,7 @@ namespace PRAPI.Controllers
             {
                 int modelIndex = searchParams.Model.IndexOf(" ") + 1;
                 searchParams.Model = searchParams.Model.Substring(modelIndex);
-                
+
                 if (searchParams.ReservedFrom > searchParams.ReservedTo)
                     return BadRequest("Reservation's start is bigger than reservation's end");
                 if (searchParams.ReservedFrom < DateTime.Now.AddDays(-1) || searchParams.ReservedTo < DateTime.Now.AddDays(-1))
@@ -127,6 +167,92 @@ namespace PRAPI.Controllers
             catch (System.Exception)
             {
                 return BadRequest("Problem fetching car user description");
+            }
+        }
+
+        [Authorize]
+        [HttpPut("update")]
+        public async Task<IActionResult> UpdateCar([FromForm]Car carForUpdate)
+        {
+            var bearerToken = Request.Headers["Authorization"].ToString();
+            if (!this.tokenService.CheckIfAdmin(bearerToken))
+                return Unauthorized();
+
+            try
+            {
+                var carFromRepo = await this.repo.GetCar(carForUpdate.CarId);
+                if (Request.Form.Files.Count > 0)
+                {
+                    try
+                    {
+                        var file = Request.Form.Files[0];
+                        if (!this.cloudinaryService.CheckFile(file))
+                            return BadRequest("Uploaded file is not a jpeg or too big ( > 6 MB )");
+
+                        this.cloudinaryService.DeleteFile(carFromRepo.PublicId);
+
+                        var uploadResult = this.cloudinaryService.UploadFile(file);
+                        carForUpdate.PublicId = uploadResult.PublicId.ToString();
+                        carForUpdate.PhotoUrl = uploadResult.Uri.ToString();
+                    }
+                    catch (System.Exception)
+                    {
+                        return BadRequest("Problem with updating car photo to cloudinary");
+                    }
+                }
+                if (Request.Form.Files.Count == 0)
+                {
+                    carForUpdate.PublicId = carFromRepo.PublicId.ToString();
+                    carForUpdate.PhotoUrl = carFromRepo.PhotoUrl.ToString();
+                }
+
+                try
+                {
+                    this.mapper.Map(carForUpdate, carFromRepo);
+                    await this.repo.SaveAll();
+                    return Ok("Car updated successfully");
+                }
+                catch (System.Exception)
+                {
+                    return BadRequest("Problem with updating car in database");
+                }
+            }
+            catch (System.Exception)
+            {
+                return BadRequest("Problem with updating car");
+            }
+        }
+
+        [Authorize]
+        [HttpDelete("{carId}")]
+        public async Task<IActionResult> DeleteCar(int carId)
+        {
+            var bearerToken = Request.Headers["Authorization"].ToString();
+            if (!this.tokenService.CheckIfAdmin(bearerToken))
+                return Unauthorized();
+
+            try
+            {
+                var carInRepo = await this.repo.GetCar(carId);
+                if (this.cloudinaryService.DeleteFile(carInRepo.PublicId))
+                {
+                    try
+                    {
+                        this.repo.Delete(carInRepo);
+                        await this.repo.SaveAll();
+                        return Ok("Car with id " + carId + " deleted successfully");
+                    }
+                    catch (System.Exception)
+                    {
+                        return BadRequest("Problem with deleting car in database");
+                    }
+                }
+                return BadRequest("Problem with deleting car photo in cloudinary");
+
+            }
+            catch (System.Exception)
+            {
+                return BadRequest("Problem with deleting car");
             }
         }
     }
