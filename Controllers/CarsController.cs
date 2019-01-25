@@ -71,7 +71,7 @@ namespace PRAPI.Controllers
                 var carForCreate = this.mapper.Map<Car>(carToCreate);
                 this.repo.CreateCar(carForCreate);
                 await this.repo.SaveAll();
-                return Ok("Car created successfully");
+                return Ok();
             }
             catch (System.Exception)
             {

@@ -13,7 +13,7 @@ namespace PRAPI.Models
         public string Fuel { get; set; }
         public string Transmission { get; set; }
         public string Description { get; set; }
-        public float LP100Km { get; set; }
+        public string LP100Km { get; set; }
         public string AirConditioned { get; set; }
         public int Price { get; set; }
         public string PhotoUrl { get; set; }
