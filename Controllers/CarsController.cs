@@ -210,7 +210,7 @@ namespace PRAPI.Controllers
                 {
                     this.mapper.Map(carForUpdate, carFromRepo);
                     await this.repo.SaveAll();
-                    return Ok("Car updated successfully");
+                    return Ok();
                 }
                 catch (System.Exception)
                 {
