@@ -240,7 +240,7 @@ namespace PRAPI.Controllers
                     {
                         this.repo.Delete(carInRepo);
                         await this.repo.SaveAll();
-                        return Ok("Car with id " + carId + " deleted successfully");
+                        return Ok();
                     }
                     catch (System.Exception)
                     {
